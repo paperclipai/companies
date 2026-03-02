@@ -10,10 +10,10 @@ Run this checklist on every heartbeat. This covers both your local planning/memo
 ## 2. Local Planning Check
 
 1. Read today's plan from `$AGENT_HOME/memory/YYYY-MM-DD.md` under "## Today's Plan".
-2. Check progress against each planned item -- what is done, what is blocked, what is next.
-3. If something is blocked, unblock it or escalate to the board.
-4. If ahead of plan, pull the next priority forward.
-5. Log progress updates to daily notes.
+2. Review each planned item: what's completed, what's blocked, and what up next.
+3. For any blockers, resolve them yourself or escalate to the board.
+4. If you're ahead, start on the next highest priority.
+5. **Record progress updates** in the daily notes.
 
 ## 3. Approval Follow-Up
 
