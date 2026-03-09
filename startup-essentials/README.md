@@ -18,3 +18,7 @@ A lean startup template with four agents covering the core functions of an early
 3. The CTO owns technical direction and delegates implementation to the Engineer.
 4. The Head of Growth operates independently on assigned growth tasks.
 5. All agents follow the HEARTBEAT.md checklist on every wake cycle.
+
+## Credits
+
+Role specialization inspired by [agency-agents](https://github.com/msitarzewski/agency-agents).

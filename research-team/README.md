@@ -17,3 +17,7 @@ A research-oriented company template modeled on an academic research group. The 
 2. Each agent folder contains four files: `AGENTS.md`, `HEARTBEAT.md`, `SOUL.md`, and `TOOLS.md`.
 3. The Lead Researcher delegates tasks to the three team members via the Paperclip API.
 4. Non-lead agents work only on assigned tasks and escalate blockers to the Lead Researcher.
+
+## Credits
+
+Role specialization inspired by [agency-agents](https://github.com/msitarzewski/agency-agents).

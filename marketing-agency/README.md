@@ -23,3 +23,7 @@ A Paperclip company template for a marketing agency. The team is led by a hands-
    - `TOOLS.md` -- tool inventory (populated as tools are acquired)
 3. The CEO delegates work to the five specialist agents via Paperclip issues.
 4. Non-CEO agents work only on assigned tasks and escalate blockers to the CEO.
+
+## Credits
+
+Role specialization inspired by [agency-agents](https://github.com/msitarzewski/agency-agents).
