@@ -1,0 +1,131 @@
+{
+  "name": "Cleanomic Landing Page A/B Auto-Test",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{"field": "hours", "hoursInterval": 6}]
+        }
+      },
+      "name": "Every 6 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [100, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://analyticsdata.googleapis.com/v1beta/properties/YOUR_GA4_PROPERTY_ID:runReport",
+        "authentication": "oAuth2",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"dateRanges\": [{\"startDate\": \"7daysAgo\", \"endDate\": \"today\"}],\n  \"dimensions\": [\n    {\"name\": \"customEvent:variant_id\"},\n    {\"name\": \"pagePath\"}\n  ],\n  \"metrics\": [\n    {\"name\": \"sessions\"},\n    {\"name\": \"conversions\"},\n    {\"name\": \"engagementRate\"}\n  ]\n}"
+      },
+      "name": "Get GA4 Variant Metrics",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [300, 300],
+      "typeVersion": 4,
+      "credentials": {
+        "googleOAuth2Api": {
+          "id": "YOUR_GOOGLE_OAUTH_CRED_ID",
+          "name": "Google OAuth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse GA4 response and calculate performance\nconst gaResponse = $input.first().json;\nconst rows = gaResponse.rows || [];\nconst threshold = 1.5; // 1.5% conversion rate minimum\nconst minSessions = 200; // Minimum traffic before evaluation\n\nconst results = [];\n\nfor (const row of rows) {\n  const variantId = row.dimensionValues[0]?.value || 'unknown';\n  const pagePath = row.dimensionValues[1]?.value || '/';\n  const sessions = parseInt(row.metricValues[0]?.value) || 0;\n  const conversions = parseInt(row.metricValues[1]?.value) || 0;\n  const engagementRate = parseFloat(row.metricValues[2]?.value) || 0;\n  \n  const conversionRate = sessions > 0 ? (conversions / sessions) * 100 : 0;\n  \n  // Only evaluate variants with enough traffic\n  if (sessions >= minSessions) {\n    results.push({\n      variantId,\n      pagePath,\n      sessions,\n      conversions,\n      conversionRate: conversionRate.toFixed(2),\n      engagementRate: (engagementRate * 100).toFixed(2),\n      underperforms: conversionRate < threshold,\n      action: conversionRate < threshold ? 'KILL' : 'KEEP',\n      timestamp: new Date().toISOString()\n    });\n  } else {\n    // Not enough data yet\n    results.push({\n      variantId,\n      pagePath,\n      sessions,\n      conversions,\n      conversionRate: conversionRate.toFixed(2),\n      action: 'WAIT',\n      reason: `Only ${sessions}/${minSessions} sessions`,\n      timestamp: new Date().toISOString()\n    });\n  }\n}\n\n// Sort by conversion rate descending\nresults.sort((a, b) => parseFloat(b.conversionRate) - parseFloat(a.conversionRate));\n\nreturn results.map(r => ({ json: r }));"
+      },
+      "name": "Calculate Performance",
+      "type": "n8n-nodes-base.code",
+      "position": [500, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.action }}",
+              "value2": "KILL"
+            }
+          ]
+        }
+      },
+      "name": "Should Kill?",
+      "type": "n8n-nodes-base.if",
+      "position": [700, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// Remove killed variant from active rotation\nconst variant = $input.first().json;\n\n// Store killed variants (would connect to your variant DB)\nconst killedVariant = {\n  variantId: variant.variantId,\n  killedAt: new Date().toISOString(),\n  finalConversionRate: variant.conversionRate,\n  totalSessions: variant.sessions,\n  reason: 'Below 1.5% conversion threshold'\n};\n\nreturn [{ json: killedVariant }];"
+      },
+      "name": "Mark Killed",
+      "type": "n8n-nodes-base.code",
+      "position": [900, 200],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "channel": "#landing-page-tests",
+        "text": "=🔴 KILLED: Variant {{ $json.variantId }}\n📉 Conv Rate: {{ $json.conversionRate }}% (< 1.5% threshold)\n👥 Sessions: {{ $json.sessions }}\n🛒 Conversions: {{ $json.conversions }}\n⏰ Killed at: {{ $json.timestamp }}"
+      },
+      "name": "Slack Alert - Killed",
+      "type": "n8n-nodes-base.slack",
+      "position": [1100, 200],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "channel": "#landing-page-tests",
+        "text": "=🟢 WINNER: Variant {{ $json.variantId }}\n📈 Conv Rate: {{ $json.conversionRate }}%\n👥 Sessions: {{ $json.sessions }}\n🛒 Conversions: {{ $json.conversions }}\n💪 Keep running!"
+      },
+      "name": "Slack Alert - Winner",
+      "type": "n8n-nodes-base.slack",
+      "position": [900, 400],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.airtable.com/v0/YOUR_BASE_ID/Variant_Results",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "airtableTokenApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"records\": [{\n    \"fields\": {\n      \"Variant ID\": \"{{ $json.variantId }}\",\n      \"Sessions\": {{ $json.sessions }},\n      \"Conversions\": {{ $json.conversions }},\n      \"Conversion Rate\": {{ $json.conversionRate }},\n      \"Action\": \"{{ $json.action }}\",\n      \"Timestamp\": \"{{ $json.timestamp }}\"\n    }\n  }]\n}"
+      },
+      "name": "Log to Airtable",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1100, 400],
+      "typeVersion": 4
+    }
+  ],
+  "connections": {
+    "Every 6 Hours": {
+      "main": [[{"node": "Get GA4 Variant Metrics", "type": "main", "index": 0}]]
+    },
+    "Get GA4 Variant Metrics": {
+      "main": [[{"node": "Calculate Performance", "type": "main", "index": 0}]]
+    },
+    "Calculate Performance": {
+      "main": [[{"node": "Should Kill?", "type": "main", "index": 0}]]
+    },
+    "Should Kill?": {
+      "main": [
+        [{"node": "Mark Killed", "type": "main", "index": 0}],
+        [{"node": "Slack Alert - Winner", "type": "main", "index": 0}]
+      ]
+    },
+    "Mark Killed": {
+      "main": [[{"node": "Slack Alert - Killed", "type": "main", "index": 0}]]
+    },
+    "Slack Alert - Winner": {
+      "main": [[{"node": "Log to Airtable", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

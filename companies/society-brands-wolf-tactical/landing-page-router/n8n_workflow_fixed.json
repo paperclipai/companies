@@ -1,0 +1,162 @@
+{
+  "name": "Landing Page A/B Test Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{"field": "hours", "hoursInterval": 6}]
+        }
+      },
+      "name": "Every 6 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [100, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "resource": "product",
+        "operation": "getAll",
+        "limit": 10,
+        "additionalFields": {}
+      },
+      "name": "Shopify Get Products",
+      "type": "n8n-nodes-base.shopify",
+      "position": [300, 300],
+      "typeVersion": 1,
+      "credentials": {
+        "shopifyApi": {
+          "id": "YOUR_SHOPIFY_CRED_ID",
+          "name": "Shopify"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate variant configs from product data\nconst products = $input.all();\nconst variants = [];\n\nconst headlines = [\n  'One Left In Stock',\n  'Last Call - Grab Yours Now', \n  'Exclusive Drop Alert',\n  'Dont Miss This Viral Product',\n  'Limited Edition - Ships Today'\n];\n\nconst ctaColors = ['#FF0000', '#00AA00', '#0066FF', '#FF6600', '#9900CC'];\nconst ctaTexts = ['Buy Now', 'Get Yours', 'Shop Now', 'Claim Yours', 'Order Today'];\n\nfor (const product of products) {\n  for (let i = 0; i < 5; i++) {\n    variants.push({\n      productId: product.json.id,\n      productTitle: product.json.title,\n      productImage: product.json.images?.[0]?.src || '',\n      productPrice: product.json.variants?.[0]?.price || '0',\n      variantId: `${product.json.id}-v${i}`,\n      headline: headlines[i],\n      ctaColor: ctaColors[i],\n      ctaText: ctaTexts[i],\n      hasTimer: i % 2 === 0,\n      hasBadge: i === 2 || i === 4\n    });\n  }\n}\n\nreturn variants.map(v => ({ json: v }));"
+      },
+      "name": "Generate Variant Configs",
+      "type": "n8n-nodes-base.code",
+      "position": [500, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.netlify.com/api/v1/sites/YOUR_SITE_ID/deploys",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "netlifyApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "files",
+              "value": "={{ JSON.stringify({ 'index.html': $json.generatedHtml }) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Deploy to Netlify",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [900, 300],
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/analytics/v3/data/ga",
+        "authentication": "oAuth2",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {"name": "ids", "value": "ga:YOUR_VIEW_ID"},
+            {"name": "start-date", "value": "7daysAgo"},
+            {"name": "end-date", "value": "today"},
+            {"name": "metrics", "value": "ga:sessions,ga:goalCompletionsAll"},
+            {"name": "dimensions", "value": "ga:pagePath"}
+          ]
+        }
+      },
+      "name": "Poll GA Metrics",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1100, 300],
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "jsCode": "// Calculate CTR and determine if variant underperforms\nconst gaData = $input.first().json;\nconst rows = gaData.rows || [];\nconst threshold = 1.5; // 1.5% CTR minimum\n\nconst results = [];\nfor (const row of rows) {\n  const pagePath = row[0];\n  const sessions = parseInt(row[1]) || 0;\n  const conversions = parseInt(row[2]) || 0;\n  const ctr = sessions > 0 ? (conversions / sessions) * 100 : 0;\n  \n  // Only evaluate if we have enough traffic (200+ sessions)\n  if (sessions >= 200) {\n    results.push({\n      pagePath,\n      sessions,\n      conversions,\n      ctr: ctr.toFixed(2),\n      underperforms: ctr < threshold,\n      action: ctr < threshold ? 'DELETE' : 'KEEP'\n    });\n  }\n}\n\nreturn results.map(r => ({ json: r }));"
+      },
+      "name": "Calculate CTR",
+      "type": "n8n-nodes-base.code",
+      "position": [1300, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.underperforms }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "If Underperforms",
+      "type": "n8n-nodes-base.if",
+      "position": [1500, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://api.netlify.com/api/v1/sites/{{ $json.siteId }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "netlifyApi"
+      },
+      "name": "Delete Loser",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1700, 200],
+      "typeVersion": 4
+    },
+    {
+      "parameters": {
+        "channel": "#landing-page-tests",
+        "text": "=🏆 WINNER: {{ $json.pagePath }}\nCTR: {{ $json.ctr }}%\nSessions: {{ $json.sessions }}\nConversions: {{ $json.conversions }}"
+      },
+      "name": "Notify Winner",
+      "type": "n8n-nodes-base.slack",
+      "position": [1700, 400],
+      "typeVersion": 2
+    }
+  ],
+  "connections": {
+    "Every 6 Hours": {
+      "main": [[{"node": "Shopify Get Products", "type": "main", "index": 0}]]
+    },
+    "Shopify Get Products": {
+      "main": [[{"node": "Generate Variant Configs", "type": "main", "index": 0}]]
+    },
+    "Generate Variant Configs": {
+      "main": [[{"node": "Deploy to Netlify", "type": "main", "index": 0}]]
+    },
+    "Deploy to Netlify": {
+      "main": [[{"node": "Poll GA Metrics", "type": "main", "index": 0}]]
+    },
+    "Poll GA Metrics": {
+      "main": [[{"node": "Calculate CTR", "type": "main", "index": 0}]]
+    },
+    "Calculate CTR": {
+      "main": [[{"node": "If Underperforms", "type": "main", "index": 0}]]
+    },
+    "If Underperforms": {
+      "main": [
+        [{"node": "Delete Loser", "type": "main", "index": 0}],
+        [{"node": "Notify Winner", "type": "main", "index": 0}]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

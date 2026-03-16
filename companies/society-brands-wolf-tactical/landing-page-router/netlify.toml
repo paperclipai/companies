@@ -1,0 +1,29 @@
+[build]
+  functions = "netlify/functions"
+  publish = "public"
+
+# API endpoints (must come before catch-all)
+[[redirects]]
+  from = "/api/metrics"
+  to = "/.netlify/functions/api-metrics"
+  status = 200
+
+[[redirects]]
+  from = "/api/insights"
+  to = "/.netlify/functions/api-insights"
+  status = 200
+
+# Redirect all other traffic to the router function
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/redirect"
+  status = 200
+
+[functions]
+  # Use Node 18 for native fetch support
+  node_bundler = "esbuild"
+
+# Environment variables (override these in Netlify UI)
+[build.environment]
+  # Set this to your forked repo's raw config URL
+  # CONFIG_URL = "https://raw.githubusercontent.com/YOUR_USERNAME/landing-page-optimizer/main/config/active_variants.json"
