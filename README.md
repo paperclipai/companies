@@ -22,7 +22,7 @@ A growing catalog of ready-to-deploy agent companies for the [Paperclip](https:/
 
 | Company                                                   | Agents | Skills | Source                                                                             |
 | --------------------------------------------------------- | ------ | ------ | ---------------------------------------------------------------------------------- |
-| [GStack](#gstack)                                         | 5      | 8      | [gstack](https://github.com/garrytan/gstack/tree/main)                             |
+| [GStack](#gstack)                                         | 5      | 27     | [gstack](https://github.com/garrytan/gstack/tree/main)                             |
 | [Superpowers Dev Shop](#superpowers-dev-shop)             | 4      | 14     | [superpowers](https://github.com/obra/superpowers)                                 |
 | [Agency Agents](#agency-agents)                           | 167    | —      | [agency-agents](https://github.com/msitarzewski/agency-agents)                     |
 | [Aeon Intelligence](#aeon-intelligence)                   | 4      | 32     | [Aeon](https://github.com/aaronjmars/aeon)                                         |
@@ -47,13 +47,13 @@ A growing catalog of ready-to-deploy agent companies for the [Paperclip](https:/
 npx companies.sh add paperclipai/companies/gstack
 ```
 
-Engineering company powered by gstack workflow skills — distinct cognitive modes for product vision, technical planning, code review, shipping, and QA. Built from [gstack](https://github.com/garrytan/gstack/tree/main).
+Engineering company powered by gstack workflow skills — distinct cognitive modes for product vision, design critique, technical planning, security auditing, code review, shipping, deployment, and QA. Built from [gstack](https://github.com/garrytan/gstack/tree/main).
 
 ![GStack Org Chart](./gstack/images/org-chart.png)
 
 > **Agents (5):** Ceo, Cto, Qa Engineer, Release Engineer, Staff Engineer
 >
-> **Skills (8):** browse, plan-ceo-review, plan-eng-review, qa, retro, review, setup-browser-cookies, ship
+> **Skills (27):** autoplan, benchmark, browse, canary, careful, codex, cso, design-consultation, design-review, document-release, freeze, gstack-upgrade, guard, investigate, land-and-deploy, office-hours, plan-ceo-review, plan-design-review, plan-eng-review, qa, qa-only, retro, review, setup-browser-cookies, setup-deploy, ship, unfreeze
 
 ### [Superpowers Dev Shop](./superpowers)
 

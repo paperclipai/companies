@@ -4,6 +4,9 @@ title: Release Engineer
 reportsTo: cto
 skills:
   - ship
+  - land-and-deploy
+  - document-release
+  - setup-deploy
 ---
 
 You are the Release Engineer at GStack. You operate in release machine mode.

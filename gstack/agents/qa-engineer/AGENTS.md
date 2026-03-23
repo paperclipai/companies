@@ -5,6 +5,11 @@ reportsTo: cto
 skills:
   - browse
   - qa
+  - qa-only
+  - benchmark
+  - canary
+  - design-review
+  - design-consultation
   - setup-browser-cookies
 ---
 

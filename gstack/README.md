@@ -1,6 +1,6 @@
 # GStack
 
-> Engineering company powered by gstack workflow skills — distinct cognitive modes for product vision, technical planning, code review, shipping, and QA
+> Engineering company powered by gstack workflow skills — distinct cognitive modes for product vision, design critique, technical planning, security auditing, code review, shipping, deployment, and QA
 
 > An [Agent Company](https://agentcompanies.io) based on [gstack](https://github.com/garrytan/gstack) — engineering workflow skills for headless browsing, QA testing, PR review, shipping, retrospectives, and plan reviews
 
@@ -13,7 +13,7 @@
 | Content | Count |
 |---------|-------|
 | Agents | 5 |
-| Skills | 8 |
+| Skills | 27 |
 
 ### Agents
 
@@ -29,19 +29,38 @@
 
 | Skill | Description | Source |
 |-------|-------------|--------|
-| browse | Fast headless browser for QA testing and site dogfooding. Navigate any URL, interact with elements, verify page state, take screenshots, check responsive layouts, test forms and uploads, handle dialogs, and assert element states. | [github](https://github.com/garrytan/gstack/blob/main/SKILL.md) |
-| plan-ceo-review | CEO/founder-mode plan review. Rethink the problem, find the 10-star product, challenge premises, expand scope when it creates a better product. | [github](https://github.com/garrytan/gstack/blob/main/plan-ceo-review/SKILL.md) |
-| plan-eng-review | Eng manager-mode plan review. Lock in the execution plan — architecture, data flow, diagrams, edge cases, test coverage, performance. | [github](https://github.com/garrytan/gstack/blob/main/plan-eng-review/SKILL.md) |
-| qa | Systematically QA test a web application. Four modes: diff-aware (automatic on feature branches), full (systematic exploration), quick (30-second smoke test), regression (compare against baseline). Produces structured report with health score, screenshots, and repro steps. | [github](https://github.com/garrytan/gstack/blob/main/qa/SKILL.md) |
-| retro | Weekly engineering retrospective. Analyzes commit history, work patterns, and code quality metrics with persistent history and trend tracking. Team-aware with per-person contributions, praise, and growth areas. | [github](https://github.com/garrytan/gstack/blob/main/retro/SKILL.md) |
-| review | Pre-landing PR review. Analyzes diff against main for SQL safety, LLM trust boundary violations, conditional side effects, and other structural issues. | [github](https://github.com/garrytan/gstack/blob/main/review/SKILL.md) |
-| setup-browser-cookies | Import cookies from your real browser (Comet, Chrome, Arc, Brave, Edge) into the headless browse session for testing authenticated pages. | [github](https://github.com/garrytan/gstack/blob/main/setup-browser-cookies/SKILL.md) |
-| ship | Ship workflow: merge main, run tests, review diff, bump VERSION, update CHANGELOG, commit, push, create PR. | [github](https://github.com/garrytan/gstack/blob/main/ship/SKILL.md) |
+| autoplan | Fully automated review pipeline: CEO, Design, and Eng reviews with auto-decisions. | [github](https://github.com/garrytan/gstack/blob/main/autoplan/SKILL.md) |
+| benchmark | Performance regression detection — TTFB, FCP, LCP, bundle sizes, request counts. | [github](https://github.com/garrytan/gstack/blob/main/benchmark/SKILL.md) |
+| browse | Headless Chromium CLI for QA testing and site dogfooding. | [github](https://github.com/garrytan/gstack/blob/main/SKILL.md) |
+| canary | Post-deploy monitoring — watches live app for console errors, perf regressions, visual anomalies. | [github](https://github.com/garrytan/gstack/blob/main/canary/SKILL.md) |
+| careful | Warns before destructive commands (rm -rf, DROP TABLE, force-push, etc.). | [github](https://github.com/garrytan/gstack/blob/main/careful/SKILL.md) |
+| codex | Multi-AI second opinion via OpenAI Codex CLI — review, challenge, consult modes. | [github](https://github.com/garrytan/gstack/blob/main/codex/SKILL.md) |
+| cso | Infrastructure-first security audit across 14 phases including OWASP Top 10 and STRIDE. | [github](https://github.com/garrytan/gstack/blob/main/cso/SKILL.md) |
+| design-consultation | Build a complete design system from scratch with competitive research. | [github](https://github.com/garrytan/gstack/blob/main/design-consultation/SKILL.md) |
+| design-review | Live-site visual QA audit with fix loop — 10-category checklist, AI slop detection. | [github](https://github.com/garrytan/gstack/blob/main/design-review/SKILL.md) |
+| document-release | Post-ship documentation sync — README, ARCHITECTURE, CHANGELOG, TODOS, VERSION. | [github](https://github.com/garrytan/gstack/blob/main/document-release/SKILL.md) |
+| freeze | Restricts file edits to a specified directory via pre-tool hooks. | [github](https://github.com/garrytan/gstack/blob/main/freeze/SKILL.md) |
+| gstack-upgrade | Self-update mechanism with escalating snooze backoff. | [github](https://github.com/garrytan/gstack/blob/main/gstack-upgrade/SKILL.md) |
+| guard | Combines careful + freeze — destructive command warnings plus edit boundary enforcement. | [github](https://github.com/garrytan/gstack/blob/main/guard/SKILL.md) |
+| investigate | Systematic root-cause debugging — no fixes without root cause investigation first. | [github](https://github.com/garrytan/gstack/blob/main/investigate/SKILL.md) |
+| land-and-deploy | Merge PR, wait for deploy, verify production health — auto-detects platform. | [github](https://github.com/garrytan/gstack/blob/main/land-and-deploy/SKILL.md) |
+| office-hours | YC Office Hours — product idea diagnostic before writing code. | [github](https://github.com/garrytan/gstack/blob/main/office-hours/SKILL.md) |
+| plan-ceo-review | CEO/founder-mode plan review — 10 review sections, nuclear scope challenge. | [github](https://github.com/garrytan/gstack/blob/main/plan-ceo-review/SKILL.md) |
+| plan-design-review | Design critique with 7 rated passes including AI slop risk detection. | [github](https://github.com/garrytan/gstack/blob/main/plan-design-review/SKILL.md) |
+| plan-eng-review | Eng manager-mode plan review — architecture, test coverage, performance. | [github](https://github.com/garrytan/gstack/blob/main/plan-eng-review/SKILL.md) |
+| qa | Systematically QA test a web app with browser-based bug fixing — 4 modes. | [github](https://github.com/garrytan/gstack/blob/main/qa/SKILL.md) |
+| qa-only | Report-only QA — documents bugs with screenshots and repro steps, no code changes. | [github](https://github.com/garrytan/gstack/blob/main/qa-only/SKILL.md) |
+| retro | Weekly engineering retrospective — commit analysis, per-person breakdowns, shipping streaks. | [github](https://github.com/garrytan/gstack/blob/main/retro/SKILL.md) |
+| review | Pre-landing PR review — two-pass checklist, adversarial review, scope drift detection. | [github](https://github.com/garrytan/gstack/blob/main/review/SKILL.md) |
+| setup-browser-cookies | Import cookies from real browsers into headless browse sessions. | [github](https://github.com/garrytan/gstack/blob/main/setup-browser-cookies/SKILL.md) |
+| setup-deploy | One-time deployment configuration — detects platform, persists to CLAUDE.md. | [github](https://github.com/garrytan/gstack/blob/main/setup-deploy/SKILL.md) |
+| ship | Fully automated ship workflow — tests, reviews, version bump, CHANGELOG, PR. | [github](https://github.com/garrytan/gstack/blob/main/ship/SKILL.md) |
+| unfreeze | Removes freeze boundary — hooks remain registered but allow everything. | [github](https://github.com/garrytan/gstack/blob/main/unfreeze/SKILL.md) |
 
 ## Getting Started
 
 ```bash
-pnpm paperclipai company import this-github-url-or-folder
+npx companies.sh add paperclipai/companies/gstack
 ```
 
 See [Paperclip](https://paperclip.ing) for more information.

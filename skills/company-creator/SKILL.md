@@ -276,3 +276,5 @@ Do NOT copy external skill content into the package unless the user explicitly a
 - **Try to keep agents 1:1** - if the readme of the source repo says something like "48 agents, 37 workflows" - then you should have 48 agents when you're done. Though when you have a lot of agents, it's a good idea to invent middle management to break them up into teams.
 
 - **Cite the upstream repo in the README** - If you're generating a readme from an upstream github, be sure to credit that near the top of the README.md. Link to the original repo and describe what it does. E.g. an [Agent Company](https://agentcompanies.io) based on [GStack](url) to do <thing>
+
+- **Every company MUST be a well-formed graph with a CEO** - make sure _every_ agent reports to either 1. their boss or 2. the ceo. You must have a CEO who reports to no one.
