@@ -1,0 +1,16 @@
+{
+  "name": "landing-page-router",
+  "version": "1.0.0",
+  "description": "Traffic router for A/B testing landing pages",
+  "main": "netlify/functions/redirect.js",
+  "scripts": {
+    "test": "echo \"No tests yet\""
+  },
+  "keywords": ["landing-page", "ab-testing", "netlify"],
+  "license": "MIT",
+  "dependencies": {
+    "@google-analytics/data": "^4.0.0",
+    "@google/generative-ai": "^0.24.0",
+    "google-auth-library": "^9.0.0"
+  }
+}
