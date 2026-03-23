@@ -1,0 +1,37 @@
+schema: paperclip/v1
+agents:
+  ceo:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+    inputs:
+      env:
+        GH_TOKEN:
+          kind: secret
+          requirement: optional
+  cto:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+  staff-engineer:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+  qa-release-lead:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-6
+    inputs:
+      env:
+        GH_TOKEN:
+          kind: secret
+          requirement: optional
+  research-perf-analyst:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
