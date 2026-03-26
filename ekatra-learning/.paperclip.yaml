@@ -1,6 +1,6 @@
 schema: paperclip/v1
 agents:
-  learning-delivery:
+  learning:
     inputs:
       env:
         TWILIO_ACCOUNT_SID:
@@ -9,27 +9,15 @@ agents:
         TWILIO_AUTH_TOKEN:
           kind: secret
           requirement: optional
-        TWILIO_WHATSAPP_NUMBER:
+        TWILIO_WHATSAPP_FROM:
           kind: secret
           requirement: optional
-        MONGODB_URI:
+        TELEGRAM_BOT_TOKEN:
           kind: secret
           requirement: optional
-  content-designer:
+  technology:
     inputs:
       env:
-        AWS_ACCESS_KEY_ID:
-          kind: secret
-          requirement: optional
-        AWS_SECRET_ACCESS_KEY:
-          kind: secret
-          requirement: optional
-        AWS_REGION:
-          kind: config
-          requirement: optional
-  platform-engineer:
-    inputs:
-      env:
-        AZURE_SUBSCRIPTION_ID:
+        DEPLOY_TOKEN:
           kind: secret
           requirement: optional

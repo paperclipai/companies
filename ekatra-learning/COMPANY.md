@@ -1,59 +1,38 @@
 ---
-name: Ekatra Learning
-description: AI-powered micro-learning company that delivers hyper-personalized courses through WhatsApp, offline devices, and web — achieving 65% completion rates versus the industry standard 5-15%
-slug: ekatra-learning
+name: Socrates Learning Bot
+description: A WhatsApp and Telegram teaching bot that turns any topic into a micro-lesson and quiz — delivered conversationally, one message at a time.
+slug: socrates-learning-bot
 schema: agentcompanies/v1
 version: 1.0.0
 license: MIT
 authors:
   - name: Ekatra
 goals:
-  - Acquire enterprise and NGO clients who need scalable workforce training or education programs
-  - Generate structured micro-courses from raw content using AI, optimized for WhatsApp delivery
-  - Deploy courses to learners via WhatsApp (Twilio) with daily lesson scheduling and spaced repetition
-  - Provision offline Raspberry Pi learning hubs for areas without internet connectivity
-  - Track learner completion rates, engagement metrics, and knowledge mastery using Bayesian Knowledge Tracing
-  - Generate ROI reports for enterprise clients demonstrating training impact and cost savings
-  - Localize and adapt course content for different languages, literacy levels, and cultural contexts
-  - Maintain unit economics at $0.40-0.80 per learner per month
+  - Teach any topic to anyone over WhatsApp or Telegram via short lessons and quizzes
+  - Sign up clients (businesses, NGOs, schools) who need scalable chat-based training
+  - Keep the bot running reliably and deploy improvements continuously
+  - Grow the user base through content marketing and targeted outreach
 ---
 
-Ekatra Learning is an AI-powered micro-learning company built to reach underserved
-populations — refugee camps, rural communities, FMCG field sales teams — through
-channels they already use: WhatsApp, offline WiFi hubs, and simple web interfaces.
+Socrates Learning Bot is a lean four-agent AI company that turns any topic into a
+chat-native micro-lesson and quiz, delivered conversationally over WhatsApp or Telegram.
 
 ## How Work Flows
 
-1. **CEO** identifies a client or market opportunity — an NGO needing refugee education,
-   an enterprise needing field sales training, a government wanting community health workers
-   upskilled. Runs needs assessment, defines success metrics, signs the engagement.
+1. **CEO** qualifies inbound leads and closes deals with businesses, NGOs, or schools
+   that need scalable chat-based training. Sets company priorities.
 
-2. **Content Designer** takes raw material (PDFs, training manuals, SME interviews,
-   video transcripts) and generates structured 3-day micro-courses. Each day has 3 modules
-   following a proven arc: Day 1 fundamentals, Day 2 intermediate application, Day 3
-   synthesis and assessment. Output is WhatsApp-native JSON with quiz banks and flashcard decks.
+2. **Marketing** runs content and outreach. Publishes sample lessons to attract prospects,
+   identifies targets, and books demos for the CEO.
 
-3. **Learning Delivery Agent** deploys the course to enrolled learners via Twilio WhatsApp
-   API. Manages the full learner lifecycle: enrollment → daily lesson scheduling →
-   progress tracking → spaced repetition reminders → completion certification. For offline
-   deployments, coordinates with Platform Engineer on Raspberry Pi provisioning.
+3. **Learning** is the core product. When a learner sends a topic, it generates a
+   5-message micro-lesson, delivers it one message at a time, then runs a 3-question quiz.
+   Tracks scores and schedules spaced-repetition reminders.
 
-4. **Analytics Agent** monitors learner outcomes in real time. Tracks completion rates
-   (target: 65%+), quiz scores, time-on-task, and concept mastery using Bayesian Knowledge
-   Tracing (BKT). Generates weekly engagement reports and monthly ROI summaries for
-   enterprise clients.
+4. **Technology** keeps the bot live. Deploys updates to Railway or Fly.io, monitors
+   Twilio and Telegram webhooks, and handles incidents.
 
-5. **Outreach Agent** runs the sales pipeline. Identifies prospects (FMCG companies with
-   distributed field teams, NGOs with education mandates, enterprises with compliance
-   training needs), qualifies leads, runs outreach sequences, and schedules demos.
-
-6. **Platform Engineer** maintains the technical infrastructure. Manages Azure/AWS
-   deployments, Twilio webhook reliability, MongoDB/Cosmos DB health, and the Raspberry Pi
-   offline device fleet. Handles incident response and capacity planning.
-
-The philosophy: each agent is a specialist with a distinct cognitive mode. The CEO thinks
-in markets and margins. The Content Designer thinks in learning arcs and retention curves.
-The Learning Delivery Agent thinks in message flows and scheduling. They don't overlap —
-they hand off.
+The philosophy: radical simplicity. A learner sends "explain photosynthesis" and the
+bot teaches them — 5 short messages, then a quiz. No app, no account, just a chat.
 
 Generated from [Ekatra](https://github.com/nicholasguo/ekatra) with the company-creator skill from [Paperclip](https://github.com/paperclipai/paperclip)
