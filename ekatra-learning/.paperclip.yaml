@@ -1,0 +1,23 @@
+schema: paperclip/v1
+agents:
+  learning:
+    inputs:
+      env:
+        TWILIO_ACCOUNT_SID:
+          kind: secret
+          requirement: optional
+        TWILIO_AUTH_TOKEN:
+          kind: secret
+          requirement: optional
+        TWILIO_WHATSAPP_FROM:
+          kind: secret
+          requirement: optional
+        TELEGRAM_BOT_TOKEN:
+          kind: secret
+          requirement: optional
+  technology:
+    inputs:
+      env:
+        DEPLOY_TOKEN:
+          kind: secret
+          requirement: optional
