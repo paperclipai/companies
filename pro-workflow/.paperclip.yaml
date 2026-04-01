@@ -1,0 +1,8 @@
+schema: paperclip/v1
+agents:
+  orchestrator:
+    inputs:
+      env:
+        GH_TOKEN:
+          kind: secret
+          requirement: optional
