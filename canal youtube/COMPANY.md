@@ -8,7 +8,7 @@ license: MIT
 authors:
   - name: Bondliden
 goals:
-  - Publicar 1 episodio diario de 15 minutos con calidad cinematografica Netflix y cliffhangers adictivos
+  - Publicar 1 episodio semanal de 15 minutos con calidad cinematografica Netflix y cliffhangers adictivos
   - Mantener coherencia narrativa, tonal, visual y emocional absoluta en cada episodio y entre episodios
   - Alcanzar 1 millon de vistas el primer mes mediante estrategia de retencion y CTR >10%
   - Operar un pipeline de superproduccion con 6 quality gates y multiples capas de revision y rechazo
