@@ -1,0 +1,15 @@
+{
+  "name": "SupraWall Secured Marketing Company",
+  "description": "A production-grade agent company with zero hardcoded API keys. All credentials (LinkedIn, Twitter, Hubspot, Google Ads) are securely injected at runtime by the SupraWall Vault, ensuring total least-privilege security.",
+  "version": "1.0.0",
+  "author": "SupraWall Contributors",
+  "plugins": [
+    "suprawall-vault"
+  ],
+  "agents": [
+    "agents/ceo.json",
+    "agents/marketing.json",
+    "agents/finance.json",
+    "agents/engineering.json"
+  ]
+}

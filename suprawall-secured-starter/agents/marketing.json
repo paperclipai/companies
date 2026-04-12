@@ -1,0 +1,18 @@
+{
+  "name": "Marketing Agent",
+  "role": "marketing",
+  "description": "Handles outbound campaigns. Requires access to social platforms and analytics.",
+  "adapter": {
+    "type": "http",
+    "url": "https://api.supra-wall.com/v1/agent/invoke",
+    "headers": {
+      "Authorization": "Bearer {{SUPRAWALL_API_KEY}}"
+    },
+    "body": {
+      "agentId": "{{agent.id}}",
+      "companyId": "{{company.id}}",
+      "role": "marketing",
+      "runId": "{{run.id}}"
+    }
+  }
+}
