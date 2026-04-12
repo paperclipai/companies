@@ -1,0 +1,87 @@
+{
+    "version": "1",
+    "date_created": "2026-04-11T20:58:31.520259+02:00",
+    "date_updated": "2026-04-11T20:58:31.536955+02:00",
+    "steps": [
+        {
+            "args": {
+                "source_paths": [
+                    "C:/PROYECTOS IA/canal-youtube/ELIAN/generated/elian_v01_seed179.png"
+                ],
+                "target_path": "C:/PROYECTOS IA/canal-youtube/ELIAN/generated/temp_assembly/SC01_norm.mp4",
+                "output_path": "C:/PROYECTOS IA/canal-youtube/ELIAN/generated/faceswap/SC01_fs.mp4",
+                "face_detector_model": "yolo_face",
+                "face_detector_size": "640x640",
+                "face_detector_margin": [
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "face_detector_angles": [
+                    0
+                ],
+                "face_detector_score": 0.5,
+                "face_landmarker_model": "2dfan4",
+                "face_landmarker_score": 0.5,
+                "face_selector_mode": "reference",
+                "face_selector_order": "large-small",
+                "face_selector_age_start": null,
+                "face_selector_age_end": null,
+                "face_selector_gender": null,
+                "face_selector_race": null,
+                "reference_face_position": 0,
+                "reference_face_distance": 0.3,
+                "reference_frame_number": 0,
+                "face_occluder_model": "xseg_1",
+                "face_parser_model": "bisenet_resnet_34",
+                "face_mask_types": [
+                    "box"
+                ],
+                "face_mask_areas": [
+                    "upper-face",
+                    "lower-face",
+                    "mouth"
+                ],
+                "face_mask_regions": [
+                    "skin",
+                    "left-eyebrow",
+                    "right-eyebrow",
+                    "left-eye",
+                    "right-eye",
+                    "glasses",
+                    "nose",
+                    "mouth",
+                    "upper-lip",
+                    "lower-lip"
+                ],
+                "face_mask_blur": 0.3,
+                "face_mask_padding": [
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "voice_extractor_model": "kim_vocal_2",
+                "trim_frame_start": null,
+                "trim_frame_end": null,
+                "temp_frame_format": "png",
+                "keep_temp": null,
+                "output_image_quality": 80,
+                "output_image_scale": 1.0,
+                "output_audio_encoder": "flac",
+                "output_audio_quality": 80,
+                "output_audio_volume": 100,
+                "output_video_encoder": "libx264",
+                "output_video_preset": "veryfast",
+                "output_video_quality": 90,
+                "output_video_scale": 1.0,
+                "output_video_fps": null,
+                "processors": [
+                    "face_swapper"
+                ]
+            },
+            "status": "started"
+        }
+    ]
+}
