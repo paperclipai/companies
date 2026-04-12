@@ -1,0 +1,190 @@
+schema: paperclip/v1
+agents:
+  # === TIER 0: CEO (Opus) ===
+  showrunner-ceo:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+
+  # === PRODUCCION EJECUTIVA (Opus + Haiku) ===
+  produccion-ejecutiva:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+  control-de-tiempos:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-haiku-4-5-20251001
+  coordinador-assets:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-haiku-4-5-20251001
+
+  # === DIRECCION CREATIVA (Opus) ===
+  director-creativo:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+
+  # === GUION (Opus + Sonnet) ===
+  jefe-de-guion:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+  dialoguista:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+  script-doctor:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+  analista-de-ritmo:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+
+  # === NARRATIVA (Opus + Sonnet + Haiku) ===
+  jefe-narrativa:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+  director-de-personajes:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+  investigador-lore:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-haiku-4-5-20251001
+
+  # === VISUAL (Opus + Sonnet) ===
+  director-visual:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+  cinematografo:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+  storyboard-artist:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+  ingeniero-prompts-visuales:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+
+  # === MUSICA (Sonnet) ===
+  director-musical:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+
+  # === POSTPRODUCCION (Opus + Sonnet) ===
+  jefe-postproduccion:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+  montajista:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+  ingeniero-audio:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+  supervisor-continuidad:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+
+  # === CONTROL DE CALIDAD (Opus + Sonnet) ===
+  director-calidad:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+  qa-narrativo:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+  qa-visual:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+  qa-final:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+
+  # === DISTRIBUCION (Sonnet + Haiku) ===
+  jefe-distribucion:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+  estratega-youtube:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+  optimizador-faceless:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-haiku-4-5-20251001
+  investigador-benchmark:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-haiku-4-5-20251001
+
+  # === TECNOLOGIA (Opus + Sonnet) ===
+  cto:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+  ingeniero-pipeline:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+  experto-supervivencia:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-20250514
+
+  # === CONSEJO CREATIVO (Opus) ===
+  council-presidente:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
