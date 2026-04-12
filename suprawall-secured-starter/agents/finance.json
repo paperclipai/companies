@@ -1,0 +1,18 @@
+{
+  "name": "Finance Agent",
+  "role": "finance",
+  "description": "Handles billing and payments. Requires access to Stripe.",
+  "adapter": {
+    "type": "http",
+    "url": "https://api.supra-wall.com/v1/agent/invoke",
+    "headers": {
+      "Authorization": "Bearer {{SUPRAWALL_API_KEY}}"
+    },
+    "body": {
+      "agentId": "{{agent.id}}",
+      "companyId": "{{company.id}}",
+      "role": "finance",
+      "runId": "{{run.id}}"
+    }
+  }
+}

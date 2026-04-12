@@ -1,0 +1,18 @@
+{
+  "name": "Engineering Agent",
+  "role": "engineering",
+  "description": "Handles infrastructure and code deployment. Requires access to GitHub and Vercel.",
+  "adapter": {
+    "type": "http",
+    "url": "https://api.supra-wall.com/v1/agent/invoke",
+    "headers": {
+      "Authorization": "Bearer {{SUPRAWALL_API_KEY}}"
+    },
+    "body": {
+      "agentId": "{{agent.id}}",
+      "companyId": "{{company.id}}",
+      "role": "engineering",
+      "runId": "{{run.id}}"
+    }
+  }
+}
