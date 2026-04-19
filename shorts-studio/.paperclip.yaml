@@ -1,0 +1,24 @@
+schema: paperclip/v1
+agents:
+  producer:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-6
+        timeoutSec: 3600
+        maxTurnsPerRun: 50
+        dangerouslySkipPermissions: true
+  strategist:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-haiku-4-5-20251001
+        timeoutSec: 600
+        maxTurnsPerRun: 30
+  analyst:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-haiku-4-5-20251001
+        timeoutSec: 600
+        maxTurnsPerRun: 20
