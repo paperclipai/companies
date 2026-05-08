@@ -30,6 +30,7 @@ A growing catalog of ready-to-deploy agent companies for the [Paperclip](https:/
 | [ClawTeam Capital](#clawteam-capital)                     | 7      | 1      | [ClawTeam](https://github.com/HKUDS/ClawTeam)                                      |
 | [ClawTeam Engineering](#clawteam-engineering)             | 5      | 1      | [ClawTeam](https://github.com/HKUDS/ClawTeam)                                      |
 | [ClawTeam Research Lab](#clawteam-research-lab)           | 4      | 1      | [ClawTeam](https://github.com/HKUDS/ClawTeam)                                      |
+| [Claude for Financial Services](#claude-for-financial-services) | 10     | 31     | [financial-services](https://github.com/anthropics/financial-services)             |
 | [Donchitos Game Studio](#donchitos-game-studio)           | 48     | 38     | [Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios)  |
 | [Fullstack Forge](#fullstack-forge)                       | 49     | 66     | [claude-skills](https://github.com/jeffallan/claude-skills)                        |
 | [K-Dense Science Lab](#k-dense-science-lab)               | 54     | 177    | [claude-scientific-skills](https://github.com/K-Dense-AI/claude-scientific-skills) |
@@ -150,6 +151,20 @@ Autonomous ML research automation through coordinated multi-agent teams that con
 > **Agents (4):** Data Analyst, Literature Surveyor, Methodology Designer, Principal Investigator
 >
 > **Skills (1):** clawteam
+
+### [Claude for Financial Services](./claude-for-financial-services)
+
+```bash
+npx companies.sh add paperclipai/companies/claude-for-financial-services
+```
+
+A finance company spanning coverage & advisory, research & modeling, fund admin & finance ops, and operations & onboarding. Community port of [anthropics/financial-services](https://github.com/anthropics/financial-services) — not affiliated with Anthropic.
+
+![Claude for Financial Services Org Chart](./claude-for-financial-services/images/org-chart.png)
+
+> **Agents (10):** Pitch Agent, Meeting Prep Agent, Market Researcher, Earnings Reviewer, Model Builder, Valuation Reviewer, GL Reconciler, Month-End Closer, Statement Auditor, KYC Screener
+>
+> **Skills (31):** 3-statement-model, accrual-schedule, audit-xls, break-trace, client-report, client-review, competitive-analysis, comps-analysis, dcf-model, deck-refresh, earnings-analysis, earnings-preview, gl-recon, ib-check-deck, ic-memo, idea-generation, investment-proposal, kyc-doc-parse, kyc-rules, lbo-model, model-update, morning-note, nav-tieout, pitch-deck, portfolio-monitoring, pptx-author, returns-analysis, roll-forward, sector-overview, variance-commentary, xlsx-author
 
 ### [Donchitos Game Studio](./donchitos-game-studio)
 
