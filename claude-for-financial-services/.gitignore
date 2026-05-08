@@ -2,3 +2,4 @@
 __pycache__/
 *.egg-info/
 .pytest_cache/
+images/org-chart.dot
