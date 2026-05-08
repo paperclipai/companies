@@ -40,3 +40,19 @@ def parse_frontmatter(text: str) -> dict[str, Any]:
     if end < 0:
         raise ValidationError("frontmatter is unterminated")
     return yaml.safe_load(text[4:end])
+
+
+def check_cross_references(package_root: Path) -> None:
+    skills_dir = package_root / "skills"
+    available = {p.name for p in skills_dir.iterdir() if p.is_dir()} if skills_dir.exists() else set()
+
+    agents_dir = package_root / "agents"
+    if not agents_dir.exists():
+        return
+    for agent_md in agents_dir.glob("*/AGENTS.md"):
+        fm = parse_frontmatter(agent_md.read_text())
+        for skill in fm.get("skills", []):
+            if skill not in available:
+                raise ValidationError(
+                    f"{agent_md.relative_to(package_root)}: references missing skill {skill!r}"
+                )
