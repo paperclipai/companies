@@ -5,6 +5,7 @@ image from the canonical manifest.yaml.
 """
 from __future__ import annotations
 
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -84,6 +85,59 @@ def load_manifest(path: Path) -> Manifest:
         agents={k: Agent(**v) for k, v in raw["agents"].items()},
         skills={k: Skill(**v) for k, v in raw["skills"].items()},
     )
+
+
+def resolve_canonical_paths(
+    skill_owners: dict[str, list[str]],
+    file_dates: dict[tuple[str, str], str],
+) -> dict[str, str]:
+    """For each skill, pick the canonical upstream agent owner.
+
+    Rule: most-recent file commit date wins; alphabetical agent name on ties.
+    """
+    result: dict[str, str] = {}
+    for skill, owners in skill_owners.items():
+        most_recent_date = max(file_dates[(a, skill)] for a in owners)
+        tied = [a for a in owners if file_dates[(a, skill)] == most_recent_date]
+        result[skill] = sorted(tied)[0]
+    return result
+
+
+def fetch_upstream_skill_inventory(
+    repo: str, commit: str
+) -> tuple[dict[str, list[str]], dict[tuple[str, str], str]]:
+    """Discover SKILL.md files under upstream agent-plugins at the pinned commit.
+
+    Returns (skill_owners, file_dates) where:
+      skill_owners[skill_slug] = [agent_slug, ...]
+      file_dates[(agent_slug, skill_slug)] = ISO 8601 commit date for that file
+    """
+    # List all SKILL.md files at the pinned tree
+    tree = subprocess.run(
+        ["gh", "api", f"repos/{repo}/git/trees/{commit}?recursive=1", "--jq",
+         '.tree[] | select(.path | test("plugins/agent-plugins/[^/]+/skills/[^/]+/SKILL\\\\.md$")) | .path'],
+        check=True, capture_output=True, text=True,
+    )
+    skill_owners: dict[str, list[str]] = {}
+    paths: list[tuple[str, str, str]] = []  # (agent, skill, full_path)
+    for line in tree.stdout.splitlines():
+        parts = line.split("/")
+        # plugins/agent-plugins/<agent>/skills/<skill>/SKILL.md
+        agent, skill = parts[2], parts[4]
+        skill_owners.setdefault(skill, []).append(agent)
+        paths.append((agent, skill, line))
+
+    # Fetch the most-recent commit date touching each file
+    file_dates: dict[tuple[str, str], str] = {}
+    for agent, skill, path in paths:
+        out = subprocess.run(
+            ["gh", "api", f"repos/{repo}/commits?path={path}&sha={commit}&per_page=1",
+             "--jq", ".[0].commit.committer.date"],
+            check=True, capture_output=True, text=True,
+        )
+        file_dates[(agent, skill)] = out.stdout.strip()
+
+    return skill_owners, file_dates
 
 
 if __name__ == "__main__":
