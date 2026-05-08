@@ -1,3 +1,4 @@
+import yaml
 from pathlib import Path
 from scripts.build import load_manifest, resolve_canonical_paths
 
@@ -44,3 +45,28 @@ def test_compute_content_hash_is_sha256_hex():
     h = compute_content_hash(content)
     # `sha256("hello world")` = b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
     assert h == "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+
+
+import yaml
+from scripts.build import emit_company, load_manifest
+
+
+def test_emit_company_produces_valid_yaml_frontmatter(tmp_path):
+    fixture = Path(__file__).parent / "fixtures" / "manifest_minimal.yaml"
+    m = load_manifest(fixture)
+    out_path = tmp_path / "COMPANY.md"
+    emit_company(m, out_path)
+
+    text = out_path.read_text()
+    assert text.startswith("---\n")
+    fm_end = text.find("\n---\n", 4)
+    assert fm_end > 0
+    fm = yaml.safe_load(text[4:fm_end])
+
+    assert fm["schema"] == "agentcompanies/v1"
+    assert fm["kind"] == "company"
+    assert fm["slug"] == "test-co"
+    assert fm["license"] == "Apache-2.0"
+    assert fm["metadata"]["upstream"]["commit"] == "deadbeef"
+    body = text[fm_end + len("\n---\n"):]
+    assert "Test Co" in body

@@ -155,6 +155,53 @@ def fetch_upstream_file(repo: str, commit: str, path: str) -> bytes:
     return base64.b64decode(out.stdout.strip())
 
 
+def _frontmatter(data: dict[str, Any]) -> str:
+    return "---\n" + yaml.safe_dump(data, sort_keys=False, allow_unicode=True) + "---\n"
+
+
+def emit_company(m: Manifest, out_path: Path) -> None:
+    fm = {
+        "schema": m.schema,
+        "kind": "company",
+        "slug": m.slug,
+        "name": m.name,
+        "description": m.description,
+        "version": m.version,
+        "license": m.license,
+        "authors": [{"name": a.name, "email": a.email} for a in m.authors],
+        "goals": m.goals,
+        "tags": m.tags,
+        "metadata": {
+            "upstream": {
+                "repo": m.upstream.repo,
+                "commit": m.upstream.commit,
+                "license": m.upstream.license,
+            },
+            "affiliation": m.affiliation,
+        },
+    }
+    body_lines = [
+        f"# {m.name}",
+        "",
+        m.description,
+        "",
+        "## Boundaries",
+        "",
+        "Nothing in this package constitutes investment, legal, tax, or accounting advice.",
+        "These agents draft analyst work product (models, memos, research notes,",
+        "reconciliations) for review by a qualified professional. They do not make",
+        "investment recommendations, execute transactions, bind risk, post to a ledger,",
+        "or approve onboarding; every output is staged for human sign-off.",
+        "",
+        "## Teams",
+        "",
+    ]
+    for slug, team in m.teams.items():
+        body_lines.append(f"- **{team.name}** (`teams/{slug}/TEAM.md`) — {team.description}")
+    body_lines.append("")
+    out_path.write_text(_frontmatter(fm) + "\n".join(body_lines) + "\n")
+
+
 if __name__ == "__main__":
     m = load_manifest(ROOT / "manifest.yaml")
     print(f"Loaded manifest: {m.slug} ({len(m.agents)} agents, {len(m.skills)} skills)")
