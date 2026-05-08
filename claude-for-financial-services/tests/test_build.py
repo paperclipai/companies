@@ -70,3 +70,21 @@ def test_emit_company_produces_valid_yaml_frontmatter(tmp_path):
     assert fm["metadata"]["upstream"]["commit"] == "deadbeef"
     body = text[fm_end + len("\n---\n"):]
     assert "Test Co" in body
+
+
+from scripts.build import emit_teams
+
+
+def test_emit_teams_creates_one_file_per_team(tmp_path):
+    fixture = Path(__file__).parent / "fixtures" / "manifest_minimal.yaml"
+    m = load_manifest(fixture)
+    emit_teams(m, tmp_path)
+
+    team_path = tmp_path / "team-a" / "TEAM.md"
+    assert team_path.exists()
+    text = team_path.read_text()
+    fm_end = text.find("\n---\n", 4)
+    fm = yaml.safe_load(text[4:fm_end])
+    assert fm["kind"] == "team"
+    assert fm["slug"] == "team-a"
+    assert fm["includes"] == ["../../agents/alpha/AGENTS.md"]

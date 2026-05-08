@@ -202,6 +202,28 @@ def emit_company(m: Manifest, out_path: Path) -> None:
     out_path.write_text(_frontmatter(fm) + "\n".join(body_lines) + "\n")
 
 
+def emit_teams(m: Manifest, teams_root: Path) -> None:
+    # Build team -> [agent_slug] mapping from agents
+    team_agents: dict[str, list[str]] = {t: [] for t in m.teams}
+    for agent_slug, agent in m.agents.items():
+        team_agents[agent.team].append(agent_slug)
+
+    for slug, team in m.teams.items():
+        out_dir = teams_root / slug
+        out_dir.mkdir(parents=True, exist_ok=True)
+        fm = {
+            "kind": "team",
+            "slug": slug,
+            "name": team.name,
+            "description": team.description,
+            "includes": [
+                f"../../agents/{a}/AGENTS.md" for a in sorted(team_agents[slug])
+            ],
+        }
+        body = f"\n# {team.name}\n\n{team.description}\n"
+        (out_dir / "TEAM.md").write_text(_frontmatter(fm) + body)
+
+
 if __name__ == "__main__":
     m = load_manifest(ROOT / "manifest.yaml")
     print(f"Loaded manifest: {m.slug} ({len(m.agents)} agents, {len(m.skills)} skills)")
