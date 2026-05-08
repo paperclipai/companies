@@ -88,3 +88,28 @@ def test_emit_teams_creates_one_file_per_team(tmp_path):
     assert fm["kind"] == "team"
     assert fm["slug"] == "team-a"
     assert fm["includes"] == ["../../agents/alpha/AGENTS.md"]
+
+
+from scripts.build import emit_agents
+
+
+def test_emit_agents_creates_one_file_per_agent_with_skill_list(tmp_path):
+    fixture = Path(__file__).parent / "fixtures" / "manifest_minimal.yaml"
+    m = load_manifest(fixture)
+    emit_agents(m, tmp_path)
+
+    agent_path = tmp_path / "alpha" / "AGENTS.md"
+    assert agent_path.exists()
+    text = agent_path.read_text()
+    fm_end = text.find("\n---\n", 4)
+    fm = yaml.safe_load(text[4:fm_end])
+    assert fm["kind"] == "agent"
+    assert fm["slug"] == "alpha"
+    assert fm["title"] == "Alpha Agent"
+    assert fm["reportsTo"] == "../../teams/team-a/TEAM.md"
+    assert fm["skills"] == ["skill-1"]
+    assert fm["metadata"]["sources"][0]["url"] == \
+        "https://github.com/example/upstream/tree/deadbeef/plugins/agent-plugins/alpha"
+
+    body = text[fm_end + len("\n---\n"):]
+    assert "Test agent" in body

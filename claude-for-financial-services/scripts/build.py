@@ -224,6 +224,31 @@ def emit_teams(m: Manifest, teams_root: Path) -> None:
         (out_dir / "TEAM.md").write_text(_frontmatter(fm) + body)
 
 
+def emit_agents(m: Manifest, agents_root: Path) -> None:
+    for slug, agent in m.agents.items():
+        out_dir = agents_root / slug
+        out_dir.mkdir(parents=True, exist_ok=True)
+        fm = {
+            "kind": "agent",
+            "slug": slug,
+            "name": agent.name,
+            "title": agent.title,
+            "reportsTo": f"../../teams/{agent.team}/TEAM.md",
+            "skills": list(agent.skills),
+            "tags": ["finance", agent.team],
+            "metadata": {
+                "sources": [
+                    {
+                        "url": f"https://github.com/{m.upstream.repo}/tree/{m.upstream.commit}/plugins/agent-plugins/{slug}",
+                        "mode": "referenced",
+                    }
+                ]
+            },
+        }
+        body = f"\n# {agent.name}\n\n{agent.description.strip()}\n"
+        (out_dir / "AGENTS.md").write_text(_frontmatter(fm) + body)
+
+
 if __name__ == "__main__":
     m = load_manifest(ROOT / "manifest.yaml")
     print(f"Loaded manifest: {m.slug} ({len(m.agents)} agents, {len(m.skills)} skills)")
