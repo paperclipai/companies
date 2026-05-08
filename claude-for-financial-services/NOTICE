@@ -1,0 +1,18 @@
+Claude for Financial Services Agent Company Port
+Copyright 2026 Jannes Stubbemann
+
+This package is a community port into the Agent Companies format
+(https://agentcompanies.io) of:
+
+  anthropics/financial-services
+  https://github.com/anthropics/financial-services
+  Copyright Anthropic, PBC and contributors
+  Licensed under the Apache License, Version 2.0
+
+Skill content referenced from the upstream repository at commit
+57772c3f1607229fba0270f94abf3c976bbd852f remains under the upstream
+license. This package adds Agent Companies manifest scaffolding and
+references upstream content by SHA; it does not modify or fork
+upstream skill content.
+
+This port is not affiliated with, endorsed by, or sponsored by Anthropic.

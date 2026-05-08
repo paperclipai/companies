@@ -1,0 +1,219 @@
+schema: agentcompanies/v1
+slug: claude-for-financial-services
+name: Claude for Financial Services
+description: 10-agent finance company — coverage, research, fund admin, and onboarding — ported from anthropics/financial-services into the Agent Companies format.
+version: 0.1.0
+license: Apache-2.0
+authors:
+  - name: Jannes Stubbemann
+    email: jannes@aqora.io
+goals:
+  - Draft analyst work product (models, memos, reconciliations) for human review.
+  - Cover the four FSI workflow areas Anthropic shipped — coverage & advisory, research & modeling, fund admin & finance ops, operations & onboarding.
+  - Stage every output for human sign-off — no agent here executes trades, posts to a ledger, or approves onboarding.
+tags: [finance, fsi, investment-banking, equity-research, private-equity, fund-admin, kyc]
+
+upstream:
+  repo: anthropics/financial-services
+  commit: 57772c3f1607229fba0270f94abf3c976bbd852f
+  license: Apache-2.0
+
+affiliation: "Community port. Not affiliated with or endorsed by Anthropic."
+
+teams:
+  coverage-advisory:
+    name: Coverage & Advisory
+    description: Client-facing pitch and meeting workflows.
+  research-modeling:
+    name: Research & Modeling
+    description: Sector research, earnings, and live financial modeling in Excel.
+  fund-admin-finance-ops:
+    name: Fund Admin & Finance Ops
+    description: Valuation, close, and statement workflows for fund administrators.
+  operations-onboarding:
+    name: Operations & Onboarding
+    description: KYC and client onboarding workflows.
+
+agents:
+  pitch-agent:
+    name: Pitch Agent
+    title: Coverage Pitch Builder
+    team: coverage-advisory
+    description: |
+      Builds target lists, runs comps and precedents, drafts an LBO, and assembles
+      a branded pitchbook end to end. Output is a deck plus underlying models,
+      staged for banker review before it goes to a client.
+    skills: [3-statement-model, audit-xls, comps-analysis, dcf-model, deck-refresh, ib-check-deck, lbo-model, pitch-deck, pptx-author, sector-overview, xlsx-author]
+  meeting-prep-agent:
+    name: Meeting Prep Agent
+    title: Client Meeting Briefing Builder
+    team: coverage-advisory
+    description: |
+      Assembles a briefing pack before every client meeting — counterparty profile,
+      recent activity, talking points, and proposal options. Staged for banker
+      review.
+    skills: [client-report, client-review, investment-proposal, pptx-author]
+  market-researcher:
+    name: Market Researcher
+    title: Sector & Theme Research Analyst
+    team: research-modeling
+    description: |
+      Turns a sector or theme into an industry overview, competitive landscape,
+      peer comps, and an ideas shortlist. Drafts research; staged for analyst
+      sign-off.
+    skills: [competitive-analysis, comps-analysis, idea-generation, pptx-author, sector-overview]
+  earnings-reviewer:
+    name: Earnings Reviewer
+    title: Earnings Call & Filings Reviewer
+    team: research-modeling
+    description: |
+      Reads earnings call transcripts and filings, updates the model, drafts a
+      morning note, and flags thesis changes. Staged for analyst sign-off.
+    skills: [audit-xls, earnings-analysis, earnings-preview, model-update, morning-note, xlsx-author]
+  model-builder:
+    name: Model Builder
+    title: Financial Model Builder
+    team: research-modeling
+    description: |
+      Builds DCFs, LBOs, 3-statement models, and comps directly in Excel. Output
+      is a working model file; staged for analyst review before use in any
+      decision.
+    skills: [3-statement-model, audit-xls, comps-analysis, dcf-model, lbo-model, xlsx-author]
+  valuation-reviewer:
+    name: Valuation Reviewer
+    title: Portfolio Valuation Reviewer
+    team: fund-admin-finance-ops
+    description: |
+      Ingests GP packages, runs the valuation template, and stages LP reporting
+      with returns analysis and IC memo drafts. Staged for valuation committee
+      review.
+    skills: [ic-memo, portfolio-monitoring, returns-analysis, xlsx-author]
+  gl-reconciler:
+    name: GL Reconciler
+    title: General Ledger Reconciliation Agent
+    team: fund-admin-finance-ops
+    description: |
+      Reconciles accounts, traces the root cause of breaks, and routes packaged
+      findings for sign-off. Does not post entries; every adjustment is staged
+      for a controller to approve.
+    skills: [audit-xls, break-trace, gl-recon, xlsx-author]
+  month-end-closer:
+    name: Month-End Closer
+    title: Month-End Close Agent
+    team: fund-admin-finance-ops
+    description: |
+      Runs the close checklist — accruals, roll-forwards, variance commentary —
+      and prepares reports. Staged for controller review before close is signed.
+    skills: [accrual-schedule, audit-xls, roll-forward, variance-commentary, xlsx-author]
+  statement-auditor:
+    name: Statement Auditor
+    title: LP Statement Auditor
+    team: fund-admin-finance-ops
+    description: |
+      Audits LP statements for consistency and audit-readiness — NAV tie-out,
+      formatting, cross-period checks. Staged for distribution sign-off.
+    skills: [audit-xls, nav-tieout, xlsx-author]
+  kyc-screener:
+    name: KYC Screener
+    title: Client Onboarding KYC Agent
+    team: operations-onboarding
+    description: |
+      Parses onboarding documents, runs the rules engine, and packages
+      escalations with gaps flagged. Does not approve onboarding; staged for
+      compliance review.
+    skills: [kyc-doc-parse, kyc-rules, xlsx-author]
+
+skills:
+  3-statement-model:
+    name: 3-Statement Model
+    description: Build linked income statement, balance sheet, and cash flow statement.
+  accrual-schedule:
+    name: Accrual Schedule
+    description: Build and update period-end accrual schedules.
+  audit-xls:
+    name: Audit XLS
+    description: Audit Excel files for formula errors and consistency.
+  break-trace:
+    name: Break Trace
+    description: Trace GL reconciliation breaks to root cause.
+  client-report:
+    name: Client Report
+    description: Compose client briefing reports from coverage data.
+  client-review:
+    name: Client Review
+    description: Synthesize prior interactions into a client review for meeting prep.
+  competitive-analysis:
+    name: Competitive Analysis
+    description: Build competitive landscape analyses.
+  comps-analysis:
+    name: Comps Analysis
+    description: Build trading-comps and precedent-transactions analyses.
+  dcf-model:
+    name: DCF Model
+    description: Build discounted-cash-flow valuation models in Excel.
+  deck-refresh:
+    name: Deck Refresh
+    description: Update existing pitch decks with current data.
+  earnings-analysis:
+    name: Earnings Analysis
+    description: Analyze earnings results vs. consensus.
+  earnings-preview:
+    name: Earnings Preview
+    description: Compose earnings preview notes ahead of release.
+  gl-recon:
+    name: GL Recon
+    description: General-ledger reconciliation workflow.
+  ib-check-deck:
+    name: IB Check Deck
+    description: Investment-banking deck review checklist.
+  ic-memo:
+    name: IC Memo
+    description: Compose investment-committee memos.
+  idea-generation:
+    name: Idea Generation
+    description: Generate investment ideas from sector research.
+  investment-proposal:
+    name: Investment Proposal
+    description: Draft investment proposals for client meetings.
+  kyc-doc-parse:
+    name: KYC Doc Parse
+    description: Parse onboarding documents into structured KYC fields.
+  kyc-rules:
+    name: KYC Rules
+    description: Run the KYC rules engine over parsed onboarding data.
+  lbo-model:
+    name: LBO Model
+    description: Build leveraged-buyout models in Excel.
+  model-update:
+    name: Model Update
+    description: Update an existing financial model from new disclosures.
+  morning-note:
+    name: Morning Note
+    description: Draft sell-side morning notes.
+  nav-tieout:
+    name: NAV Tieout
+    description: Tie LP statement NAV to underlying records.
+  pitch-deck:
+    name: Pitch Deck
+    description: Compose pitchbook decks end to end.
+  portfolio-monitoring:
+    name: Portfolio Monitoring
+    description: Monitor portfolio company performance.
+  pptx-author:
+    name: PPTX Author
+    description: Author and edit PowerPoint files programmatically.
+  returns-analysis:
+    name: Returns Analysis
+    description: Compute and present fund-level returns.
+  roll-forward:
+    name: Roll Forward
+    description: Roll balances forward across periods.
+  sector-overview:
+    name: Sector Overview
+    description: Build industry sector overviews.
+  variance-commentary:
+    name: Variance Commentary
+    description: Compose period-over-period variance commentary.
+  xlsx-author:
+    name: XLSX Author
+    description: Author and edit Excel files programmatically.
