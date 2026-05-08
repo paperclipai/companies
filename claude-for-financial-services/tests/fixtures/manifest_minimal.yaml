@@ -1,0 +1,29 @@
+schema: agentcompanies/v1
+slug: test-co
+name: Test Co
+description: Fixture
+version: 0.1.0
+license: Apache-2.0
+authors: [{name: Test, email: t@example.com}]
+goals: [Test]
+tags: [test]
+upstream:
+  repo: example/upstream
+  commit: deadbeef
+  license: Apache-2.0
+affiliation: "Test"
+teams:
+  team-a:
+    name: Team A
+    description: Test team
+agents:
+  alpha:
+    name: Alpha
+    title: Alpha Agent
+    team: team-a
+    description: Test agent
+    skills: [skill-1]
+skills:
+  skill-1:
+    name: Skill One
+    description: Test skill
