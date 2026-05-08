@@ -249,6 +249,43 @@ def emit_agents(m: Manifest, agents_root: Path) -> None:
         (out_dir / "AGENTS.md").write_text(_frontmatter(fm) + body)
 
 
+def emit_skills(
+    m: Manifest,
+    canonical_owner: dict[str, str],
+    content_hashes: dict[str, str],
+    skills_root: Path,
+) -> None:
+    for slug, skill in m.skills.items():
+        owner = canonical_owner[slug]
+        upstream_path = f"plugins/agent-plugins/{owner}/skills/{slug}/SKILL.md"
+        out_dir = skills_root / slug
+        out_dir.mkdir(parents=True, exist_ok=True)
+        fm = {
+            "kind": "skill",
+            "slug": slug,
+            "name": skill.name,
+            "description": skill.description,
+            "version": "0.1.0",
+            "metadata": {
+                "sources": [
+                    {
+                        "repo": m.upstream.repo,
+                        "commit": m.upstream.commit,
+                        "path": upstream_path,
+                        "mode": "referenced",
+                        "contentHash": content_hashes[slug],
+                    }
+                ]
+            },
+        }
+        body = (
+            f"\n# {skill.name}\n\n"
+            f"> Skill content lives upstream at the path above (commit `{m.upstream.commit}`).\n"
+            f"> Pull the upstream file before invocation; do not edit this manifest in place.\n"
+        )
+        (out_dir / "SKILL.md").write_text(_frontmatter(fm) + body)
+
+
 if __name__ == "__main__":
     m = load_manifest(ROOT / "manifest.yaml")
     print(f"Loaded manifest: {m.slug} ({len(m.agents)} agents, {len(m.skills)} skills)")

@@ -113,3 +113,30 @@ def test_emit_agents_creates_one_file_per_agent_with_skill_list(tmp_path):
 
     body = text[fm_end + len("\n---\n"):]
     assert "Test agent" in body
+
+
+from scripts.build import emit_skills
+
+
+def test_emit_skills_creates_one_file_per_skill_with_canonical_path(tmp_path):
+    fixture = Path(__file__).parent / "fixtures" / "manifest_minimal.yaml"
+    m = load_manifest(fixture)
+
+    canonical = {"skill-1": "alpha"}  # canonical owner per skill
+    hashes = {"skill-1": "abc123"}    # content hash per skill
+
+    emit_skills(m, canonical, hashes, tmp_path)
+
+    skill_path = tmp_path / "skill-1" / "SKILL.md"
+    assert skill_path.exists()
+    text = skill_path.read_text()
+    fm_end = text.find("\n---\n", 4)
+    fm = yaml.safe_load(text[4:fm_end])
+    assert fm["kind"] == "skill"
+    assert fm["slug"] == "skill-1"
+    src = fm["metadata"]["sources"][0]
+    assert src["repo"] == "example/upstream"
+    assert src["commit"] == "deadbeef"
+    assert src["path"] == "plugins/agent-plugins/alpha/skills/skill-1/SKILL.md"
+    assert src["mode"] == "referenced"
+    assert src["contentHash"] == "abc123"
