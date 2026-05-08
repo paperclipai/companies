@@ -115,7 +115,17 @@ def test_emit_agents_creates_one_file_per_agent_with_skill_list(tmp_path):
     assert "Test agent" in body
 
 
-from scripts.build import emit_skills
+from scripts.build import emit_skills, emit_org_chart_dot
+
+
+def test_emit_org_chart_dot_contains_all_agents_and_teams():
+    fixture = Path(__file__).parent / "fixtures" / "manifest_minimal.yaml"
+    m = load_manifest(fixture)
+    dot = emit_org_chart_dot(m)
+    assert "digraph" in dot
+    assert '"team-a"' in dot
+    assert '"alpha"' in dot
+    assert '"team-a" -> "alpha"' in dot
 
 
 def test_emit_skills_creates_one_file_per_skill_with_canonical_path(tmp_path):

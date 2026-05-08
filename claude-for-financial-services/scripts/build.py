@@ -286,6 +286,67 @@ def emit_skills(
         (out_dir / "SKILL.md").write_text(_frontmatter(fm) + body)
 
 
-if __name__ == "__main__":
+def emit_org_chart_dot(m: Manifest) -> str:
+    lines = [
+        "digraph org {",
+        "  rankdir=TB;",
+        '  node [shape=box, style=rounded, fontname="Helvetica"];',
+        f'  "{m.slug}" [label="{m.name}", style="rounded,filled", fillcolor="#e8f0fe"];',
+    ]
+    for team_slug, team in m.teams.items():
+        lines.append(f'  "{team_slug}" [label="{team.name}", fillcolor="#fef3c7", style="rounded,filled"];')
+        lines.append(f'  "{m.slug}" -> "{team_slug}";')
+    for agent_slug, agent in m.agents.items():
+        lines.append(f'  "{agent_slug}" [label="{agent.name}"];')
+        lines.append(f'  "{agent.team}" -> "{agent_slug}";')
+    lines.append("}")
+    return "\n".join(lines) + "\n"
+
+
+def render_org_chart(dot_text: str, out_png: Path) -> None:
+    """Render `dot_text` to a PNG via the `dot` CLI."""
+    out_png.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        ["dot", "-Tpng", "-o", str(out_png)],
+        input=dot_text, text=True, check=True,
+    )
+
+
+def main() -> None:
     m = load_manifest(ROOT / "manifest.yaml")
-    print(f"Loaded manifest: {m.slug} ({len(m.agents)} agents, {len(m.skills)} skills)")
+    print(f"Building {m.slug} v{m.version} from manifest…")
+
+    skill_owners, file_dates = fetch_upstream_skill_inventory(m.upstream.repo, m.upstream.commit)
+    canonical = resolve_canonical_paths(skill_owners, file_dates)
+
+    # Filter canonical to only skills declared in our manifest
+    canonical = {k: v for k, v in canonical.items() if k in m.skills}
+
+    # Compute content hashes for each declared skill at the canonical path
+    hashes: dict[str, str] = {}
+    for slug, owner in canonical.items():
+        path = f"plugins/agent-plugins/{owner}/skills/{slug}/SKILL.md"
+        content = fetch_upstream_file(m.upstream.repo, m.upstream.commit, path)
+        hashes[slug] = compute_content_hash(content)
+        print(f"  hashed {slug} ← {path}")
+
+    # Verify every declared skill has a canonical owner
+    missing = set(m.skills) - set(canonical)
+    if missing:
+        raise SystemExit(f"Skills declared in manifest but missing upstream: {sorted(missing)}")
+
+    emit_company(m, ROOT / "COMPANY.md")
+    emit_teams(m, ROOT / "teams")
+    emit_agents(m, ROOT / "agents")
+    emit_skills(m, canonical, hashes, ROOT / "skills")
+
+    dot = emit_org_chart_dot(m)
+    (ROOT / "images").mkdir(exist_ok=True)
+    (ROOT / "images" / "org-chart.dot").write_text(dot)
+    render_org_chart(dot, ROOT / "images" / "org-chart.png")
+
+    print("Build complete.")
+
+
+if __name__ == "__main__":
+    main()
