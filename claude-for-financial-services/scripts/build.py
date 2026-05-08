@@ -5,6 +5,8 @@ image from the canonical manifest.yaml.
 """
 from __future__ import annotations
 
+import base64
+import hashlib
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -138,6 +140,19 @@ def fetch_upstream_skill_inventory(
         file_dates[(agent, skill)] = out.stdout.strip()
 
     return skill_owners, file_dates
+
+
+def compute_content_hash(content: bytes) -> str:
+    return hashlib.sha256(content).hexdigest()
+
+
+def fetch_upstream_file(repo: str, commit: str, path: str) -> bytes:
+    """Fetch raw bytes of a file from upstream at the pinned commit."""
+    out = subprocess.run(
+        ["gh", "api", f"repos/{repo}/contents/{path}?ref={commit}", "--jq", ".content"],
+        check=True, capture_output=True, text=True,
+    )
+    return base64.b64decode(out.stdout.strip())
 
 
 if __name__ == "__main__":

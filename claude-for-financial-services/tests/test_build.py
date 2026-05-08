@@ -34,3 +34,13 @@ def test_resolve_canonical_paths_picks_alphabetical_when_dates_equal():
     assert result["xlsx-author"] == "alpha"
     assert result["dcf-model"] == "pitch-agent"  # most-recent wins
     assert result["kyc-rules"] == "kyc-screener"  # only owner
+
+
+from scripts.build import compute_content_hash
+
+
+def test_compute_content_hash_is_sha256_hex():
+    content = b"hello world"
+    h = compute_content_hash(content)
+    # `sha256("hello world")` = b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
+    assert h == "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
