@@ -4,11 +4,13 @@
 
 10 agents across 4 functional areas — coverage & advisory, research & modeling, fund admin & finance ops, operations & onboarding. Skills are referenced upstream by pinned commit SHA, not vendored.
 
-## Install
+## Getting Started
 
 ```bash
-npx companies.sh add paperclipai/companies/claude-for-financial-services
+npx paperclipai company import https://github.com/paperclipai/companies/tree/main/claude-for-financial-services
 ```
+
+See [Paperclip](https://paperclip.ing) for more information.
 
 ## Org chart
 
@@ -75,12 +77,6 @@ claude-for-financial-services/
 ├── Makefile
 ├── images/org-chart.png        # generated
 ├── tests/                      # pytest unit tests for the generator
-├── docs/superpowers/           # design spec + implementation plan
 ├── LICENSE                     # Apache-2.0
 └── NOTICE                      # upstream attribution
 ```
-
-## Spec & implementation plan
-
-- Design: [`docs/superpowers/specs/2026-05-09-agent-company-port-design.md`](./docs/superpowers/specs/2026-05-09-agent-company-port-design.md)
-- Plan: [`docs/superpowers/plans/2026-05-09-agent-company-port-implementation.md`](./docs/superpowers/plans/2026-05-09-agent-company-port-implementation.md)
