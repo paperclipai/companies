@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: accrual-schedule
 name: Accrual Schedule
 description: Build and update period-end accrual schedules.

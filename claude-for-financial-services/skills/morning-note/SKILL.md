@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: morning-note
 name: Morning Note
 description: Draft sell-side morning notes.

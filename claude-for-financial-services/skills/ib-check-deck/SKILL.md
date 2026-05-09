@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: ib-check-deck
 name: IB Check Deck
 description: Investment-banking deck review checklist.

@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: earnings-analysis
 name: Earnings Analysis
 description: Analyze earnings results vs. consensus.

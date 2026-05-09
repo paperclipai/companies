@@ -1,5 +1,4 @@
 ---
-kind: agent
 slug: pitch-agent
 name: Pitch Agent
 title: Coverage Pitch Builder

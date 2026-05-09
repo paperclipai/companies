@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: idea-generation
 name: Idea Generation
 description: Generate investment ideas from sector research.

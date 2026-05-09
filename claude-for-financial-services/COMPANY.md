@@ -1,6 +1,5 @@
 ---
 schema: agentcompanies/v1
-kind: company
 slug: claude-for-financial-services
 name: Claude for Financial Services
 description: 10-agent finance company — coverage, research, fund admin, and onboarding

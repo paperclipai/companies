@@ -1,5 +1,4 @@
 ---
-kind: agent
 slug: meeting-prep-agent
 name: Meeting Prep Agent
 title: Client Meeting Briefing Builder

@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: pitch-deck
 name: Pitch Deck
 description: Compose pitchbook decks end to end.

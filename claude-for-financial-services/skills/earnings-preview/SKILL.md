@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: earnings-preview
 name: Earnings Preview
 description: Compose earnings preview notes ahead of release.

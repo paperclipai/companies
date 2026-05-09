@@ -1,5 +1,4 @@
 ---
-kind: agent
 slug: month-end-closer
 name: Month-End Closer
 title: Month-End Close Agent

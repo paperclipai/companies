@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: roll-forward
 name: Roll Forward
 description: Roll balances forward across periods.

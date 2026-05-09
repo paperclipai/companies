@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: 3-statement-model
 name: 3-Statement Model
 description: Build linked income statement, balance sheet, and cash flow statement.

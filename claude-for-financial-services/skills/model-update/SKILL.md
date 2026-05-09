@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: model-update
 name: Model Update
 description: Update an existing financial model from new disclosures.

@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: ic-memo
 name: IC Memo
 description: Compose investment-committee memos.

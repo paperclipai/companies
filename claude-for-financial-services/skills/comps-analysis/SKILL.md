@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: comps-analysis
 name: Comps Analysis
 description: Build trading-comps and precedent-transactions analyses.

@@ -162,7 +162,6 @@ def _frontmatter(data: dict[str, Any]) -> str:
 def emit_company(m: Manifest, out_path: Path) -> None:
     fm = {
         "schema": m.schema,
-        "kind": "company",
         "slug": m.slug,
         "name": m.name,
         "description": m.description,
@@ -212,7 +211,6 @@ def emit_teams(m: Manifest, teams_root: Path) -> None:
         out_dir = teams_root / slug
         out_dir.mkdir(parents=True, exist_ok=True)
         fm = {
-            "kind": "team",
             "slug": slug,
             "name": team.name,
             "description": team.description,
@@ -229,7 +227,6 @@ def emit_agents(m: Manifest, agents_root: Path) -> None:
         out_dir = agents_root / slug
         out_dir.mkdir(parents=True, exist_ok=True)
         fm = {
-            "kind": "agent",
             "slug": slug,
             "name": agent.name,
             "title": agent.title,
@@ -261,7 +258,6 @@ def emit_skills(
         out_dir = skills_root / slug
         out_dir.mkdir(parents=True, exist_ok=True)
         fm = {
-            "kind": "skill",
             "slug": slug,
             "name": skill.name,
             "description": skill.description,

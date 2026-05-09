@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: break-trace
 name: Break Trace
 description: Trace GL reconciliation breaks to root cause.

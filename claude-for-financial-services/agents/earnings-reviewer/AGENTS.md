@@ -1,5 +1,4 @@
 ---
-kind: agent
 slug: earnings-reviewer
 name: Earnings Reviewer
 title: Earnings Call & Filings Reviewer

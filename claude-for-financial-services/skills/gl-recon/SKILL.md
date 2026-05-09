@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: gl-recon
 name: GL Recon
 description: General-ledger reconciliation workflow.

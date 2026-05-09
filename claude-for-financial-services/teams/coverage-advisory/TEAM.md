@@ -1,5 +1,4 @@
 ---
-kind: team
 slug: coverage-advisory
 name: Coverage & Advisory
 description: Client-facing pitch and meeting workflows.

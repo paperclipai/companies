@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: client-report
 name: Client Report
 description: Compose client briefing reports from coverage data.

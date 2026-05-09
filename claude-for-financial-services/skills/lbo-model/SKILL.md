@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: lbo-model
 name: LBO Model
 description: Build leveraged-buyout models in Excel.

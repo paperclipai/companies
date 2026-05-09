@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: kyc-doc-parse
 name: KYC Doc Parse
 description: Parse onboarding documents into structured KYC fields.

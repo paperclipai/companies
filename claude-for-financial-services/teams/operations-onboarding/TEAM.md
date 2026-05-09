@@ -1,5 +1,4 @@
 ---
-kind: team
 slug: operations-onboarding
 name: Operations & Onboarding
 description: KYC and client onboarding workflows.

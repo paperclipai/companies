@@ -1,5 +1,4 @@
 ---
-kind: agent
 slug: kyc-screener
 name: KYC Screener
 title: Client Onboarding KYC Agent

@@ -18,10 +18,10 @@ class ValidationError(Exception):
 
 
 REQUIRED_FIELDS: dict[str, set[str]] = {
-    "company": {"schema", "kind", "slug", "name", "description", "version", "license", "authors"},
-    "team": {"kind", "slug", "name", "description", "includes"},
-    "agent": {"kind", "slug", "name", "title", "reportsTo", "skills"},
-    "skill": {"kind", "slug", "name", "description"},
+    "company": {"schema", "slug", "name", "description", "version", "license", "authors"},
+    "team": {"slug", "name", "description", "includes"},
+    "agent": {"slug", "name", "title", "reportsTo", "skills"},
+    "skill": {"slug", "name", "description"},
 }
 
 
@@ -32,8 +32,6 @@ def validate_frontmatter(kind: str, fm: dict[str, Any]) -> None:
     missing = required - set(fm)
     if missing:
         raise ValidationError(f"{kind} missing required fields: {sorted(missing)}")
-    if fm.get("kind") != kind:
-        raise ValidationError(f"frontmatter kind={fm.get('kind')!r} does not match expected {kind!r}")
 
 
 def parse_frontmatter(text: str) -> dict[str, Any]:

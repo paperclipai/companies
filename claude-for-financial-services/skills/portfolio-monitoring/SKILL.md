@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: portfolio-monitoring
 name: Portfolio Monitoring
 description: Monitor portfolio company performance.

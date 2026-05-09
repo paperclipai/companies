@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: nav-tieout
 name: NAV Tieout
 description: Tie LP statement NAV to underlying records.

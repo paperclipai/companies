@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: investment-proposal
 name: Investment Proposal
 description: Draft investment proposals for client meetings.

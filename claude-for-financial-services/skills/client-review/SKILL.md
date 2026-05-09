@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: client-review
 name: Client Review
 description: Synthesize prior interactions into a client review for meeting prep.

@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: competitive-analysis
 name: Competitive Analysis
 description: Build competitive landscape analyses.

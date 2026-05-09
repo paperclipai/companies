@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: audit-xls
 name: Audit XLS
 description: Audit Excel files for formula errors and consistency.

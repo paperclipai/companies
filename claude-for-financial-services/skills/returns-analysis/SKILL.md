@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: returns-analysis
 name: Returns Analysis
 description: Compute and present fund-level returns.

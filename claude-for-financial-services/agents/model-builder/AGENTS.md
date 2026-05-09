@@ -1,5 +1,4 @@
 ---
-kind: agent
 slug: model-builder
 name: Model Builder
 title: Financial Model Builder

@@ -7,14 +7,14 @@ from scripts.check import validate_frontmatter, ValidationError, check_content_h
 
 
 def test_validate_frontmatter_rejects_missing_required_field():
-    bad = {"kind": "agent", "slug": "x"}  # missing name, description
+    bad = {"slug": "x", "title": "X-er", "reportsTo": "../../teams/t/TEAM.md", "skills": ["s"]}  # missing name
     with pytest.raises(ValidationError, match="name"):
         validate_frontmatter("agent", bad)
 
 
 def test_validate_frontmatter_accepts_complete_agent():
     good = {
-        "kind": "agent", "slug": "x", "name": "X", "title": "X-er",
+        "slug": "x", "name": "X", "title": "X-er",
         "reportsTo": "../../teams/t/TEAM.md", "skills": ["s"],
     }
     validate_frontmatter("agent", good)  # no exception

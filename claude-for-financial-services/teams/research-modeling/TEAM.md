@@ -1,5 +1,4 @@
 ---
-kind: team
 slug: research-modeling
 name: Research & Modeling
 description: Sector research, earnings, and live financial modeling in Excel.

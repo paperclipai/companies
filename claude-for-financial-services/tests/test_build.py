@@ -64,7 +64,7 @@ def test_emit_company_produces_valid_yaml_frontmatter(tmp_path):
     fm = yaml.safe_load(text[4:fm_end])
 
     assert fm["schema"] == "agentcompanies/v1"
-    assert fm["kind"] == "company"
+    assert "kind" not in fm
     assert fm["slug"] == "test-co"
     assert fm["license"] == "Apache-2.0"
     assert fm["metadata"]["upstream"]["commit"] == "deadbeef"
@@ -85,7 +85,7 @@ def test_emit_teams_creates_one_file_per_team(tmp_path):
     text = team_path.read_text()
     fm_end = text.find("\n---\n", 4)
     fm = yaml.safe_load(text[4:fm_end])
-    assert fm["kind"] == "team"
+    assert "kind" not in fm
     assert fm["slug"] == "team-a"
     assert fm["includes"] == ["../../agents/alpha/AGENTS.md"]
 
@@ -103,7 +103,7 @@ def test_emit_agents_creates_one_file_per_agent_with_skill_list(tmp_path):
     text = agent_path.read_text()
     fm_end = text.find("\n---\n", 4)
     fm = yaml.safe_load(text[4:fm_end])
-    assert fm["kind"] == "agent"
+    assert "kind" not in fm
     assert fm["slug"] == "alpha"
     assert fm["title"] == "Alpha Agent"
     assert fm["reportsTo"] == "../../teams/team-a/TEAM.md"
@@ -142,7 +142,7 @@ def test_emit_skills_creates_one_file_per_skill_with_canonical_path(tmp_path):
     text = skill_path.read_text()
     fm_end = text.find("\n---\n", 4)
     fm = yaml.safe_load(text[4:fm_end])
-    assert fm["kind"] == "skill"
+    assert "kind" not in fm
     assert fm["slug"] == "skill-1"
     src = fm["metadata"]["sources"][0]
     assert src["repo"] == "example/upstream"

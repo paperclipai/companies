@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: sector-overview
 name: Sector Overview
 description: Build industry sector overviews.

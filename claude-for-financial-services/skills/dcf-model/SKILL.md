@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: dcf-model
 name: DCF Model
 description: Build discounted-cash-flow valuation models in Excel.

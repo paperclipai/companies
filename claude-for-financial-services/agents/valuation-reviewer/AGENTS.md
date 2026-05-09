@@ -1,5 +1,4 @@
 ---
-kind: agent
 slug: valuation-reviewer
 name: Valuation Reviewer
 title: Portfolio Valuation Reviewer

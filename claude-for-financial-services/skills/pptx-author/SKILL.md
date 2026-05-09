@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: pptx-author
 name: PPTX Author
 description: Author and edit PowerPoint files programmatically.

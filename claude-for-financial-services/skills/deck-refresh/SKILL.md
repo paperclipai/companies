@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: deck-refresh
 name: Deck Refresh
 description: Update existing pitch decks with current data.

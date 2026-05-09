@@ -1,5 +1,4 @@
 ---
-kind: agent
 slug: market-researcher
 name: Market Researcher
 title: Sector & Theme Research Analyst

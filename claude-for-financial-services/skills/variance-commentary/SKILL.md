@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: variance-commentary
 name: Variance Commentary
 description: Compose period-over-period variance commentary.

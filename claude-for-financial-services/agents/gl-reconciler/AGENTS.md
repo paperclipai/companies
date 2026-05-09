@@ -1,5 +1,4 @@
 ---
-kind: agent
 slug: gl-reconciler
 name: GL Reconciler
 title: General Ledger Reconciliation Agent

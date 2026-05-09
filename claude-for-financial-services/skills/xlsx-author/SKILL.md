@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: xlsx-author
 name: XLSX Author
 description: Author and edit Excel files programmatically.

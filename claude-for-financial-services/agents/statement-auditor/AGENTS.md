@@ -1,5 +1,4 @@
 ---
-kind: agent
 slug: statement-auditor
 name: Statement Auditor
 title: LP Statement Auditor

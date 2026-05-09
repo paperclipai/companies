@@ -1,5 +1,4 @@
 ---
-kind: skill
 slug: kyc-rules
 name: KYC Rules
 description: Run the KYC rules engine over parsed onboarding data.
