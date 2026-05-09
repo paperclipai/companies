@@ -8,7 +8,7 @@ version: 0.1.0
 license: Apache-2.0
 authors:
 - name: Jannes Stubbemann
-  email: jannes@aqora.io
+  email: jannes@paperclip.inc
 goals:
 - Draft analyst work product (models, memos, reconciliations) for human review.
 - Cover the four FSI workflow areas Anthropic shipped — coverage & advisory, research
