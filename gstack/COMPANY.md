@@ -3,7 +3,7 @@ name: GStack
 description: Engineering company powered by gstack workflow skills — distinct cognitive modes for product vision, design critique, technical planning, security auditing, code review, shipping, deployment, and QA
 slug: gstack
 schema: agentcompanies/v1
-version: 1.0.0
+version: 1.57.9.0
 license: MIT
 authors:
   - name: Dotta
@@ -14,7 +14,7 @@ goals:
   - Provide safety guardrails, performance benchmarking, and cross-model verification
 ---
 
-GStack is an engineering company built around Garry Tan's gstack workflow skills. Each agent operates in a distinct cognitive mode, and work flows through the company as a pipeline:
+GStack is an engineering company built around Garry Tan's gstack workflow skills, updated to upstream 1.57.9.0. Each agent operates in a distinct cognitive mode, and work flows through the company as a pipeline:
 
 1. **CEO** rethinks the problem and finds the 10-star product
 2. **CTO** locks the technical plan — architecture, data flow, edge cases
@@ -26,4 +26,4 @@ The philosophy: planning is not review, review is not shipping, founder taste is
 
 ---
 
-Generated from [gstack](https://github.com/garrytan/gstack/tree/main) with the company-creator skill from [Paperclip](https://github.com/paperclipai/paperclip)
+Generated from [gstack](https://github.com/garrytan/gstack/tree/8241949357263be64013a8410171def68cff920c) with the company-creator skill from [Paperclip](https://github.com/paperclipai/paperclip)
