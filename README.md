@@ -36,6 +36,7 @@ A growing catalog of ready-to-deploy agent companies for the [Paperclip](https:/
 | [MiniMax Studio](#minimax-studio)                         | 5      | 10     | [MiniMax-AI/skills](https://github.com/MiniMax-AI/skills)                          |
 | [Product Compass Consulting](#product-compass-consulting) | 48     | 65     | [pm-skills](https://github.com/phuryn/pm-skills)                                   |
 | [RedOak Review](#redoak-review)                           | 5      | 6      | [claude-code-workflows](https://github.com/OneRedOak/claude-code-workflows)        |
+| [Software Factory Method](#software-factory-method)       | 20     | 53     | [software-factory-method](https://github.com/gtpzao/software-factory-method)       |
 | [TÂCHES Creative](#tâches-creative)                       | 6      | 35     | [taches-cc-resources](https://github.com/glittercowboy/taches-cc-resources)        |
 | [Trail of Bits Security](#trail-of-bits-security)         | 28     | 35     | [skills](https://github.com/trailofbits/skills)                                    |
 
@@ -262,6 +263,20 @@ A prestigious security auditing and verification firm with expertise in smart co
 > **Agents (28):** Audit Lead, Binary Analyst, Blockchain Security Lead, Burpsuite Analyst, Ceo, Chaos Agent, Chief Security Officer, Code Auditor, Constant Time Analyst, Contract Entry Point Analyst, Culture Analyst, Engineering Lead, False Positive Analyst, Infrastructure Engineer, Malware Analyst, Mobile Security Analyst, Property Tester, Reverse Engineering Lead, Skill Developer, Smart Contract Auditor, Spec Compliance Analyst, Static Analysis Engineer, Supply Chain Auditor, Testing Specialist, Tooling Engineer, and 3 more
 >
 > **Skills (35):** agentic-actions-auditor, ask-questions-if-underspecified, audit-context-building, building-secure-contracts, burpsuite-project-parser, claude-in-chrome-troubleshooting, constant-time-analysis, culture-index, debug-buttercup, devcontainer-setup, differential-review, dwarf-expert, entry-point-analyzer, firebase-apk-scanner, fp-check, gh-cli, git-cleanup, insecure-defaults, let-fate-decide, modern-python, property-based-testing, seatbelt-sandboxer, second-opinion, semgrep-rule-creator, semgrep-rule-variant-creator, and 10 more
+
+### [Software Factory Method](./software-factory-method)
+
+```bash
+npx companies.sh add paperclipai/companies/software-factory-method
+```
+
+Portable software delivery company package for Paperclip with BMAD-inspired workflows across discovery, planning, architecture, implementation, QA, release, and documentation. Packaged for public reuse in [software-factory-method](https://github.com/gtpzao/software-factory-method) and adapted from [BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD).
+
+![Software Factory Method Org Chart](./software-factory-method/images/org-chart.png)
+
+> **Agents (20):** Analyst, Architect, Backend, Ceo, Cmo, Cto, Dataanalytics, Devcodex, Devops, Docsmemory, Frontend, Mobile, Orchestrator, Pm, Qa, Releasemanager, Security, Support, Tea, Uxdesigner
+>
+> **Skills (53):** bmad-analyst, bmad-architect, bmad-assess-project-risk, bmad-brownfield-create-epic, bmad-brownfield-create-story, bmad-brownfield-prd, bmad-check-implementation-readiness, bmad-code-review, bmad-correct-course, bmad-create-brownfield-story, bmad-create-doc, bmad-create-next-story, bmad-create-story, bmad-dev-fix-sharded-doc, bmad-document-project, and 38 more
 
 ### [Default](./default)
 

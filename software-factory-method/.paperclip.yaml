@@ -1,0 +1,271 @@
+schema: "paperclip/v1"
+agents:
+  analyst:
+    role: "researcher"
+    icon: "search"
+    capabilities: "Turns vague requests into requirements, constraints, stakeholder maps, flows, and evidence-backed scope."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  architect:
+    role: "engineer"
+    icon: "hexagon"
+    capabilities: "Owns solution design, boundaries, tradeoffs, technical decomposition, and architecture artifacts."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  backend:
+    role: "engineer"
+    icon: "database"
+    capabilities: "Implements backend, API, auth, DB, and server-side workflows safely and incrementally."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  ceo:
+    role: "ceo"
+    icon: "briefcase"
+    capabilities: "Owns final product direction, approvals, priority calls, and company-level decisions across the software factory."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    runtime:
+      heartbeat:
+        intervalSec: 300
+    permissions:
+      canCreateAgents: true
+    budgetMonthlyCents: 10000
+  cmo:
+    role: "cmo"
+    icon: "target"
+    capabilities: "Owns positioning, messaging, growth programs, content, and go-to-market execution."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  cto:
+    role: "cto"
+    icon: "circuit-board"
+    capabilities: "Owns technical strategy, architecture governance, engineering execution, and technical hiring."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  dataanalytics:
+    role: "researcher"
+    icon: "radar"
+    capabilities: "Owns metrics framing, reporting questions, operational signals, and evidence for business or product decisions."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  devcodex:
+    role: "engineer"
+    icon: "terminal"
+    capabilities: "Primary hands-on technical executor using local Codex workflow across attached repositories."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  devops:
+    role: "devops"
+    icon: "rocket"
+    capabilities: "Owns environments, deployment flow, release mechanics, operational reliability, and runtime debugging."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  docsmemory:
+    role: "general"
+    icon: "file-code"
+    capabilities: "Owns living docs, decision memory, continuity notes, operational records, and document quality."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  frontend:
+    role: "engineer"
+    icon: "code"
+    capabilities: "Implements frontend flows, state, forms, dashboards, and UX contracts without breaking product coherence."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  mobile:
+    role: "engineer"
+    icon: "zap"
+    capabilities: "Owns mobile app implementation, parity decisions, and mobile-specific constraints."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  orchestrator:
+    role: "general"
+    icon: "brain"
+    capabilities: "Routes work across BMAD stages, enforces approval gates, and keeps discovery, delivery, QA, and release aligned."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  pm:
+    role: "pm"
+    icon: "target"
+    capabilities: "Owns PRDs, story slicing, acceptance criteria, sprint sequencing, and product decision clarity."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  qa:
+    role: "qa"
+    icon: "bug"
+    capabilities: "Owns test planning, regression checks, e2e generation, and evidence-backed validation."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  releasemanager:
+    role: "pm"
+    icon: "crown"
+    capabilities: "Owns release readiness, cross-team checkpoints, final verification collection, and go or no-go framing."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  security:
+    role: "security"
+    icon: "shield"
+    capabilities: "Owns security review, threat detection, auth and data-risk scrutiny, and pressure tests on sensitive changes."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  support:
+    role: "general"
+    icon: "message-square"
+    capabilities: "Owns issue triage, user-facing problem framing, reproduction hygiene, and escalation quality."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  tea:
+    role: "qa"
+    icon: "microscope"
+    capabilities: "Owns test strategy, coverage architecture, readiness gates, and quality-system design."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+  uxdesigner:
+    role: "designer"
+    icon: "wand"
+    capabilities: "Owns UX architecture, user journeys, design-system coherence, and research-backed interaction design."
+    adapter:
+      type: "codex_local"
+      config:
+        dangerouslyBypassApprovalsAndSandbox: true
+        model: "gpt-5.4"
+        modelReasoningEffort: "xhigh"
+        search: true
+    budgetMonthlyCents: 10000
+company:
+  attachmentMaxBytes: 10485760
+sidebar:
+  agents:
+    - "ceo"
+    - "orchestrator"
+    - "analyst"
+    - "cmo"
+    - "cto"
+    - "dataanalytics"
+    - "docsmemory"
+    - "pm"
+    - "support"
+    - "uxdesigner"
+    - "architect"
+    - "backend"
+    - "devcodex"
+    - "devops"
+    - "frontend"
+    - "mobile"
+    - "qa"
+    - "releasemanager"
+    - "security"
+    - "tea"
