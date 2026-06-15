@@ -1,0 +1,21 @@
+version: 1
+defaults:
+  policy: latest_tag_or_default_head
+  pr_grouping: upstream
+  target: repo_only
+  agent_refresh: report_only
+  refresh_mode: preserve_catalog_stubs
+upstreams:
+  Donchitos/Claude-Code-Game-Studios: {}
+  HKUDS/ClawTeam: {}
+  K-Dense-AI/claude-scientific-skills: {}
+  MiniMax-AI/skills: {}
+  OneRedOak/claude-code-workflows: {}
+  aaronjmars/aeon: {}
+  agent-sh/agentsys: {}
+  garrytan/gstack: {}
+  glittercowboy/taches-cc-resources: {}
+  jeffallan/claude-skills: {}
+  obra/superpowers: {}
+  phuryn/pm-skills: {}
+  trailofbits/skills: {}

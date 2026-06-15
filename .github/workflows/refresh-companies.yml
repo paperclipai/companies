@@ -1,0 +1,54 @@
+name: Report company upstream drift
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ISSUE_TITLE: Company upstream refresh report
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build drift report
+        id: report
+        run: |
+          set -euo pipefail
+          scripts/refresh-companies --check --json > "$RUNNER_TEMP/drift.json"
+          scripts/refresh-companies --check --markdown > "$RUNNER_TEMP/drift.md"
+          cat "$RUNNER_TEMP/drift.md" >> "$GITHUB_STEP_SUMMARY"
+
+          has_drift="$(jq -r '((.stale_count > 0) or (.new_upstream_skill_path_count > 0) or ((.errors | length) > 0))' "$RUNNER_TEMP/drift.json")"
+          echo "has_drift=$has_drift" >> "$GITHUB_OUTPUT"
+
+      - name: Update tracking issue
+        run: |
+          set -euo pipefail
+          issue="$(gh issue list --state all --limit 100 --search "$ISSUE_TITLE in:title" --json number,title --jq ".[] | select(.title == \"$ISSUE_TITLE\") | .number" | head -n 1)"
+
+          {
+            printf 'Updated by [%s](%s/actions/runs/%s).\\n\\n' "$GITHUB_WORKFLOW" "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
+            cat "$RUNNER_TEMP/drift.md"
+          } > "$RUNNER_TEMP/issue-body.md"
+
+          if [ -z "$issue" ]; then
+            issue_url="$(gh issue create --title "$ISSUE_TITLE" --body-file "$RUNNER_TEMP/issue-body.md")"
+            issue="${issue_url##*/}"
+          else
+            gh issue edit "$issue" --body-file "$RUNNER_TEMP/issue-body.md"
+          fi
+
+          if [ "${{ steps.report.outputs.has_drift }}" = "true" ]; then
+            gh issue reopen "$issue" >/dev/null 2>&1 || true
+          else
+            gh issue close "$issue" --comment "No upstream drift detected in the latest scheduled report." >/dev/null 2>&1 || true
+          fi

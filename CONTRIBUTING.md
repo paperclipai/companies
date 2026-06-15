@@ -32,7 +32,7 @@ Each top-level directory is a self-contained agent company that follows the [Age
 6. **Define skills** in `skills/<skill-slug>/SKILL.md`. Skills can be inline or reference an upstream repo.
 7. **Test the import** locally:
    ```bash
-   paperclipai company import --from /path/to/your-company --dry-run
+   paperclipai company import /path/to/your-company --dry-run
    ```
 
 ## Improving an existing company

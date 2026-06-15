@@ -1,0 +1,339 @@
+#!/usr/bin/env python3
+"""Report upstream drift for catalog company skills.
+
+This script is intentionally non-mutating. It compares each tracked skill
+source commit with the latest semver-like upstream tag, falling back to the
+upstream default branch HEAD when no release tag exists.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import subprocess
+import sys
+import urllib.request
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Iterable
+
+
+ROOT = Path(__file__).resolve().parents[1]
+FRONTMATTER_RE = re.compile(r"\A---\n(?P<body>.*?\n)---\n?", re.DOTALL)
+SEMVER_TAG_RE = re.compile(r"^v?(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:[-+.]?([0-9A-Za-z.-]+))?$")
+SOURCE_RE = re.compile(
+    r"(?ms)^metadata:\n.*?^\s*-\s*kind:\s*github-file\s*$"
+    r"(?P<block>.*?)(?=^\s*-\s*kind:|\Z)"
+)
+
+
+@dataclass(frozen=True)
+class SkillSource:
+    company: str
+    file: Path
+    repo: str
+    path: str
+    commit: str
+    usage: str | None
+
+
+@dataclass(frozen=True)
+class UpstreamTarget:
+    repo: str
+    ref_name: str
+    commit: str
+    source: str
+
+
+def run_git(args: list[str], *, timeout: int = 30) -> str:
+    return subprocess.check_output(["git", *args], text=True, stderr=subprocess.PIPE, timeout=timeout)
+
+
+def parse_manifest_repos() -> set[str]:
+    manifest = ROOT / ".companies-refresh.yaml"
+    if not manifest.exists():
+        return set()
+    repos: set[str] = set()
+    in_upstreams = False
+    for raw in manifest.read_text().splitlines():
+        line = raw.rstrip()
+        if line == "upstreams:":
+            in_upstreams = True
+            continue
+        if not in_upstreams:
+            continue
+        if line and not line.startswith("  "):
+            break
+        match = re.match(r"^\s{2}([^:#][^:]*):", line)
+        if match:
+            repos.add(match.group(1).strip().strip("\"'"))
+    return repos
+
+
+def split_frontmatter(text: str) -> tuple[str, str]:
+    match = FRONTMATTER_RE.match(text)
+    if not match:
+        return "", text
+    return match.group("body"), text[match.end() :]
+
+
+def read_field(block: str, key: str) -> str | None:
+    match = re.search(rf"(?m)^\s*{re.escape(key)}:\s*(.*?)\s*$", block)
+    if not match:
+        return None
+    value = match.group(1).strip()
+    if (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
+        value = value[1:-1]
+    return value
+
+
+def discover_sources() -> list[SkillSource]:
+    sources: list[SkillSource] = []
+    for company_dir in sorted(p for p in ROOT.iterdir() if p.is_dir() and (p / "COMPANY.md").exists()):
+        for skill_file in sorted((company_dir / "skills").glob("*/SKILL.md")):
+            frontmatter, _ = split_frontmatter(skill_file.read_text(errors="replace"))
+            match = SOURCE_RE.search(frontmatter)
+            if not match:
+                continue
+            block = match.group("block")
+            repo = read_field(block, "repo")
+            path = read_field(block, "path")
+            commit = read_field(block, "commit")
+            usage = read_field(block, "usage")
+            if repo and path and commit:
+                sources.append(SkillSource(company_dir.name, skill_file, repo, path, commit, usage))
+    return sources
+
+
+def semver_key(tag: str) -> tuple[int, int, int, int, str]:
+    match = SEMVER_TAG_RE.match(tag)
+    if not match:
+        return (-1, -1, -1, -1, tag)
+    major = int(match.group(1))
+    minor = int(match.group(2) or 0)
+    patch = int(match.group(3) or 0)
+    prerelease = match.group(4) or ""
+    stable_rank = 1 if prerelease == "" else 0
+    return (major, minor, patch, stable_rank, prerelease)
+
+
+def resolve_default_head(repo: str) -> tuple[str, str]:
+    output = run_git(["ls-remote", "--symref", f"https://github.com/{repo}.git", "HEAD"])
+    default_ref = "refs/heads/main"
+    head = ""
+    for line in output.splitlines():
+        if line.startswith("ref:"):
+            default_ref = line.split()[1]
+        elif line.endswith("\tHEAD"):
+            head = line.split()[0]
+    if not head:
+        raise RuntimeError(f"could not resolve default branch HEAD for {repo}")
+    return default_ref, head
+
+
+def resolve_latest_tag(repo: str) -> tuple[str, str] | None:
+    output = run_git(["ls-remote", "--tags", f"https://github.com/{repo}.git"])
+    tags: dict[str, str] = {}
+    for line in output.splitlines():
+        sha, ref = line.split("\t", 1)
+        name = ref.removeprefix("refs/tags/")
+        peeled = name.endswith("^{}")
+        clean = name[:-3] if peeled else name
+        if SEMVER_TAG_RE.match(clean) and (peeled or clean not in tags):
+            tags[clean] = sha
+    if not tags:
+        return None
+    latest = sorted(tags, key=semver_key)[-1]
+    return latest, tags[latest]
+
+
+def resolve_target(repo: str) -> UpstreamTarget:
+    latest_tag = resolve_latest_tag(repo)
+    if latest_tag:
+        tag, commit = latest_tag
+        return UpstreamTarget(repo, tag, commit, "tag")
+    default_ref, head = resolve_default_head(repo)
+    return UpstreamTarget(repo, default_ref.removeprefix("refs/heads/"), head, "default_branch")
+
+
+def github_tree(repo: str, commit: str) -> list[str]:
+    url = f"https://api.github.com/repos/{repo}/git/trees/{commit}?recursive=1"
+    try:
+        with urllib.request.urlopen(url, timeout=30) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except Exception:
+        return []
+    return [entry["path"] for entry in payload.get("tree", []) if entry.get("type") == "blob"]
+
+
+def skill_collection_prefix(path: str) -> str | None:
+    if "/skills/" in path:
+        return path.split("/skills/", 1)[0] + "/skills/"
+    if path.startswith("skills/"):
+        return "skills/"
+    if path.endswith("/SKILL.md"):
+        return path.rsplit("/", 2)[0] + "/"
+    return None
+
+
+def report_added_paths(repo: str, target: UpstreamTarget, sources: list[SkillSource]) -> list[str]:
+    tree = github_tree(repo, target.commit)
+    current_paths = {source.path for source in sources}
+    prefixes = {prefix for source in sources if (prefix := skill_collection_prefix(source.path))}
+    upstream_skills = [
+        path for path in tree
+        if path.endswith("/SKILL.md") and any(path.startswith(prefix) for prefix in prefixes)
+    ]
+    return sorted(path for path in upstream_skills if path not in current_paths)
+
+
+def validate_metadata(sources: list[SkillSource]) -> list[str]:
+    errors: list[str] = []
+    for source in sources:
+        rel = source.file.relative_to(ROOT)
+        if not re.fullmatch(r"[0-9a-f]{7,40}", source.commit):
+            errors.append(f"{rel} has invalid commit {source.commit!r}")
+        if source.path.startswith("/") or ".." in source.path.split("/"):
+            errors.append(f"{rel} has unsafe source path {source.path!r}")
+        if source.usage not in {"referenced", "vendored", "mixed", None}:
+            errors.append(f"{rel} has unexpected usage {source.usage!r}")
+    return errors
+
+
+def group_by_repo(sources: Iterable[SkillSource]) -> dict[str, list[SkillSource]]:
+    grouped: dict[str, list[SkillSource]] = {}
+    for source in sources:
+        grouped.setdefault(source.repo, []).append(source)
+    return dict(sorted(grouped.items()))
+
+
+def print_repo_list(sources: list[SkillSource]) -> None:
+    for repo, repo_sources in group_by_repo(sources).items():
+        companies = sorted({source.company for source in repo_sources})
+        commits = sorted({source.commit for source in repo_sources})
+        print(f"{repo}\tcompanies={','.join(companies)}\tcommits={','.join(commits)}\tskills={len(repo_sources)}")
+
+
+def build_summary(selected_sources: list[SkillSource]) -> dict[str, object]:
+    targets: dict[str, UpstreamTarget] = {}
+    repo_errors: dict[str, str] = {}
+    repos: dict[str, object] = {}
+
+    for repo, repo_sources in group_by_repo(selected_sources).items():
+        try:
+            target = resolve_target(repo)
+            targets[repo] = target
+        except Exception as error:
+            repo_errors[repo] = str(error)
+            continue
+
+        stale_sources = [source for source in repo_sources if source.commit != target.commit]
+        repos[repo] = {
+            "target_ref": target.ref_name,
+            "target_commit": target.commit,
+            "target_source": target.source,
+            "affected_companies": sorted({source.company for source in repo_sources}),
+            "skills": len(repo_sources),
+            "current_commits": sorted({source.commit for source in repo_sources}),
+            "stale_count": len(stale_sources),
+            "stale_files": [str(source.file.relative_to(ROOT)) for source in stale_sources],
+            "new_upstream_skill_paths": report_added_paths(repo, target, repo_sources),
+        }
+
+    return {
+        "mode": "report",
+        "repos": repos,
+        "stale_count": sum(int(repo["stale_count"]) for repo in repos.values()),
+        "new_upstream_skill_path_count": sum(len(repo["new_upstream_skill_paths"]) for repo in repos.values()),
+        "errors": validate_metadata(selected_sources) + [f"{repo}: {error}" for repo, error in sorted(repo_errors.items())],
+    }
+
+
+def print_text(summary: dict[str, object]) -> None:
+    print("Mode: report")
+    for repo, data in summary["repos"].items():
+        print(f"\n{repo}: {data['target_ref']} {data['target_commit'][:12]} ({data['target_source']})")
+        print(f"  companies: {', '.join(data['affected_companies'])}")
+        print(f"  skills: {data['skills']}")
+        print(f"  stale sources: {data['stale_count']}")
+        if data["new_upstream_skill_paths"]:
+            print(f"  new upstream skill paths: {len(data['new_upstream_skill_paths'])}")
+            for path in data["new_upstream_skill_paths"][:20]:
+                print(f"    + {path}")
+            if len(data["new_upstream_skill_paths"]) > 20:
+                print("    ...")
+    if summary["errors"]:
+        print("\nErrors:", file=sys.stderr)
+        for error in summary["errors"]:
+            print(f"  - {error}", file=sys.stderr)
+
+
+def print_markdown(summary: dict[str, object]) -> None:
+    has_drift = summary["stale_count"] or summary["new_upstream_skill_path_count"] or summary["errors"]
+    print("# Company Upstream Refresh Report")
+    print()
+    print("This report is informational. It does not update company packages or open refresh pull requests.")
+    print("Use it to decide when a maintainer-authored package refresh is warranted.")
+    print()
+    print(f"- Status: {'drift detected' if has_drift else 'no drift detected'}")
+    print(f"- Stale source references: {summary['stale_count']}")
+    print(f"- New upstream skill paths: {summary['new_upstream_skill_path_count']}")
+    print(f"- Errors: {len(summary['errors'])}")
+    print()
+    for repo, data in summary["repos"].items():
+        print(f"## {repo}")
+        print(f"- Target: `{data['target_ref']}` `{data['target_commit'][:12]}` ({data['target_source']})")
+        print(f"- Companies: {', '.join(f'`{company}`' for company in data['affected_companies'])}")
+        print(f"- Tracked skills: {data['skills']}")
+        print(f"- Stale sources: {data['stale_count']}")
+        if data["new_upstream_skill_paths"]:
+            print(f"- New upstream skill paths: {len(data['new_upstream_skill_paths'])}")
+            for path in data["new_upstream_skill_paths"][:20]:
+                print(f"  - `{path}`")
+            if len(data["new_upstream_skill_paths"]) > 20:
+                print("  - ...")
+        print()
+    if summary["errors"]:
+        print("## Errors")
+        for error in summary["errors"]:
+            print(f"- {error}")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Report company skill source drift.")
+    parser.add_argument("--check", action="store_true", help="Report drift without writing files.")
+    parser.add_argument("--fail-on-updates", action="store_true", help="Exit 1 when drift is detected.")
+    parser.add_argument("--repo", action="append", help="Limit to an upstream repo. Can be repeated.")
+    parser.add_argument("--list-repos", action="store_true", help="List discovered upstream repos.")
+    parser.add_argument("--json", action="store_true", help="Print JSON summary.")
+    parser.add_argument("--markdown", action="store_true", help="Print Markdown summary.")
+    args = parser.parse_args()
+
+    sources = discover_sources()
+    manifest_repos = parse_manifest_repos()
+    selected_repos = set(args.repo or []) or manifest_repos or {source.repo for source in sources}
+    selected_sources = [source for source in sources if source.repo in selected_repos]
+
+    if args.list_repos:
+        print_repo_list(selected_sources)
+        return 0 if not validate_metadata(selected_sources) else 2
+
+    summary = build_summary(selected_sources)
+    if args.json:
+        print(json.dumps(summary, indent=2, sort_keys=True))
+    elif args.markdown:
+        print_markdown(summary)
+    else:
+        print_text(summary)
+
+    if summary["errors"]:
+        return 2
+    has_drift = summary["stale_count"] or summary["new_upstream_skill_path_count"]
+    if args.fail_on_updates and has_drift:
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

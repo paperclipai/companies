@@ -1,0 +1,128 @@
+name: Validate company packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: "Pull request number to validate."
+        required: true
+  pull_request:
+    paths:
+      - ".github/workflows/validate-company-packages.yml"
+      - "*/COMPANY.md"
+      - "*/agents/**"
+      - "*/skills/**"
+      - "*/teams/**"
+      - "*/README.md"
+      - "*/LICENSE"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      PAPERCLIPAI_VERSION: "2026.609.0"
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+
+      - name: Configure Paperclip data dir
+        run: echo "PAPERCLIP_HOME=$RUNNER_TEMP/paperclip" >> "$GITHUB_ENV"
+
+      - name: Select PRs
+        id: prs
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            printf '%s\n' "${{ github.event.pull_request.number }}" > "$RUNNER_TEMP/prs.txt"
+          else
+            printf '%s\n' "${{ inputs.pr }}" > "$RUNNER_TEMP/prs.txt"
+          fi
+
+          if [ ! -s "$RUNNER_TEMP/prs.txt" ]; then
+            echo "has_prs=false" >> "$GITHUB_OUTPUT"
+            echo "No pull request selected."
+            exit 0
+          fi
+
+          echo "has_prs=true" >> "$GITHUB_OUTPUT"
+          {
+            echo "prs<<EOF"
+            cat "$RUNNER_TEMP/prs.txt"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+          cat "$RUNNER_TEMP/prs.txt"
+
+      - name: Start Paperclip
+        if: steps.prs.outputs.has_prs == 'true'
+        run: |
+          set -euo pipefail
+          nohup npx -y "paperclipai@$PAPERCLIPAI_VERSION" onboard --yes --bind loopback --data-dir "$PAPERCLIP_HOME" > "$RUNNER_TEMP/paperclip.log" 2>&1 &
+
+          for _ in {1..60}; do
+            if curl --fail --silent http://localhost:3100/api/health >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          cat "$RUNNER_TEMP/paperclip.log"
+          exit 1
+
+      - name: Validate PR company packages
+        if: steps.prs.outputs.has_prs == 'true'
+        run: |
+          set -euo pipefail
+          while IFS= read -r pr; do
+            [ -n "$pr" ] || continue
+            echo "::group::PR #$pr"
+            base="$(gh pr view "$pr" --json baseRefOid --jq .baseRefOid)"
+            head="$(gh pr view "$pr" --json headRefName --jq .headRefName)"
+            git fetch --depth=1 origin "$head"
+            git checkout --force FETCH_HEAD
+
+            companies="$(git diff --name-only "$base" HEAD \
+              | awk -F/ 'NF > 1 {print $1}' \
+              | sort -u \
+              | while read -r company; do
+                  if [ -f "$company/COMPANY.md" ]; then
+                    echo "$company"
+                  fi
+                done)"
+
+            if [ -z "$companies" ]; then
+              echo "No company package changes."
+              echo "::endgroup::"
+              continue
+            fi
+
+            while IFS= read -r company; do
+              [ -n "$company" ] || continue
+              npx -y "paperclipai@$PAPERCLIPAI_VERSION" company import "./$company" \
+                --dry-run \
+                --api-base http://localhost:3100 \
+                --data-dir "$PAPERCLIP_HOME"
+            done <<EOF
+          $companies
+          EOF
+            echo "::endgroup::"
+          done <<'EOF'
+          ${{ steps.prs.outputs.prs }}
+          EOF
+
+      - name: Show Paperclip log
+        if: failure() && steps.prs.outputs.has_prs == 'true'
+        run: |
+          if [ -f "$RUNNER_TEMP/paperclip.log" ]; then
+            cat "$RUNNER_TEMP/paperclip.log"
+          fi
